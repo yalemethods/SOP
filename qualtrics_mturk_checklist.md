@@ -31,7 +31,7 @@ The checklist also contains a number of example images and `R` code designed to 
             1. Randomization
                 * Do *not* select "Evenly Present Elements"
                 * *Do* ensure that the Randomizer is set to present the correct number of elements to respondents
-                  ![Randomizer Example](/images/randomizer.jpg)
+                  ![Randomizer Example](mturk/randomizer.jpg)
                 * Ensure that other design features (e.g., branching) remain constant across randomized arms, where appropriate
             2. Branching
                 * Ensure that branching is specified correctly (e.g., conditioned on the correct question/answer choice pair(s), embedded data, and randomization)
@@ -48,15 +48,15 @@ The checklist also contains a number of example images and `R` code designed to 
             1. A consent form *must* be included as the first question
             2. An end-of-survey message containing a randomized confirmation code *must* be specified in the survey (see Section 2.i.b.d.)
                 * An end-of-survey confirmation code can be generated using a Web Service element, as below
-                ![Web Service Example](/images/web_service.jpg)
+                ![Web Service Example](mturk/web_service.jpg)
                 * Ensure that a generated confirmation code is only presented to respondents who meet recruitment requirements and complete the survey as given (the default end-of-survey message may be employed for respondents who do not meet the recruitment requirements)
                 * This message must be written and stored in the Qualtrics Library, and specified in Survey Options, as below
-                ![End of Survey Message Example](/images/end_of_survey_message.jpg)
+                ![End of Survey Message Example](mturk/end_of_survey_message.jpg)
                 * Ensure that the Embedded Data term "called" in the Web Service element matches that defined in the message written and stored in the Qualtrics Library (see above image)
             3. Anonymization
                 * Survey responses must be anonymized in accordance with IRB exemption/approval
                 * Responses can be anonymized by checking the appropriate box in Survey Options &rarr; Survey Protection, as below
-                ![Anonymization Example](/images/anonymize.jpg)
+                ![Anonymization Example](mturk/anonymize.jpg)
             4. "Covariate" questions
                 * For all "covariate" questions with appropriate analogues in the ANES/MTurkES survey instrument, use the ANES/MTurkES specification
                     * The MTurkES specification is recommended, as it was specifically designed for use on Qualtrics and MTurk
@@ -71,7 +71,7 @@ The checklist also contains a number of example images and `R` code designed to 
 	    	* Images (e.g., graphical treatments) to be used in conjunction with, or in lieu of, question text must first be added to the Qualtrics Graphics Library, accessible by clicking Library &rarr; Graphics Library
 		    * Images can be uploaded to the Graphics Library by clicking the Upload Graphic button
 		* Once uploaded to the Graphics Library, images can be embedded in questions by opening the Rich Content Editor, and clicking the Insert Graphic button, as shown below
-		![Insert Graphic Example](/images/insert_graphic.jpg)
+		![Insert Graphic Example](mturk/insert_graphic.jpg)
 		* Ensure that all included images (in particular, textual images) satisfy the requirements enumerated in Section 2.i.a.
     2. Alpha testing -- prior to "beta testing" with research assistants (or lab members, if conducting research as part of a research lab), the survey must be "alpha tested" in its entirety both using the Preview Survey functionality, and with recorded responses (using the Anonymous Link for web distribution)
         1. Independent testing (Preview Survey)
@@ -100,21 +100,21 @@ The checklist also contains a number of example images and `R` code designed to 
     1. Create a new HIT
         1. Navigate to the "Create" tab at the navigation bar at the top of the MTurk Requester page
         2. If not employing an MTurk default format, select "Other" from the format list on the left; then select "Create Project"
-	![Create HIT Example](/images/create_hit.jpg)
+	![Create HIT Example](mturk/create_hit.jpg)
         3. Specify requirements for "Describe your HIT to Workers"
-	![Describe HIT Example](/images/describe_hit.jpg)
+	![Describe HIT Example](mturk/describe_hit.jpg)
             1. Specify a "HIT Title"
             2. Specify a short "HIT description"
             3. Specify appropriate "Keywords" pertaining to the HIT
         4. Specify requirements for "Setting up your HIT"
-	![Setting Up Your HIT Example](/images/setting_up_your_hit.jpg)
+	![Setting Up Your HIT Example](mturk/setting_up_your_hit.jpg)
             1. Specify "Reward per assignment" (i.e., the payment rate, per subject)
             2. Specify "Number of assignments per HIT" (for a survey or survey experiment, this will correspond to the number of subjects to be recruited for the pilot or study---see Section 4.i. for further details; $.50/5 minutes is recommended)
             1. Specify "Time allotted per assignment" (1 Hours is recommended as a default)
             2. Specify time for "HIT expires in" (5 Days is recommended as a default)
             3. Specify time for "Auto-approve and pay Workers in" (8 Hours is recommended as a default)
         5. Specify "Worker requirements"
-	![Worker Requirements Example](/images/worker_requirements.jpg)
+	![Worker Requirements Example](mturk/worker_requirements.jpg)
             1. *Do not* "Require that Workers be Masters to do your HITs
                 * Masters are not required for quality tasks, but cost appreciably more than standard MTurk workers
             2. "Specify any additional qualifications Workers must meet to work on your HITs" (up to five may be set)
