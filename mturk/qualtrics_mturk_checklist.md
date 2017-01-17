@@ -127,6 +127,7 @@ The checklist also contains a number of example images and `R` code designed to 
                 * Remove "HIT Approval Rate" and "Number of HITs Approved" qualifications
                 * Include additional qualification type based on Worker ID collected in the preceding wave(s)
                     * Qualifications can be assigned using `MTurkR`, which may also be used to recontact workers; first install and load the `MTurkR` package
+                    
                     ```r
                     install.packages("devtools")
                     library(devtools)
@@ -134,7 +135,9 @@ The checklist also contains a number of example images and `R` code designed to 
                     
                     library(MturkR)
                     ```
+                    
                     Then, specify the vector of unique IDs to be used for recontacting respondents to the preceding wave(s)
+                    
                     ```r
                     outcome <- rnorm(100)
                     respondent_id <- paste(sample(c(0:9, LETTERS), 6), collapse = "")
@@ -145,13 +148,17 @@ The checklist also contains a number of example images and `R` code designed to 
                                    
                     recontact_ids <- prior_wave_data$respondent_id
                     ```
+                    
                     Next, provide your credentials (i.e., your Access Key and Secret Access Key from MTurk
+                    
                     ```r
                     access.key <- "EXAMPLEACCESSKEY"
                     secret.access.key <- "EXAMPLESECRETACCESSKEY"
                     credentials(c(access.key, secret.access.key))
                     ```
+                    
                     Generate a Qualification Type for the subjects to be recontacted, and assign the qualification type to the relevant workers
+                    
                     ```r
                     recontact_qual <-  
                         CreateQualificationType(
@@ -163,7 +170,9 @@ The checklist also contains a number of example images and `R` code designed to 
                         AssignQualification(qual = recontact_qual$QualificationTypeId, 
                                             workers = recontact_ids)
                     ```
+                    
                     After specifying that workers must have been given this qualification type in MTurk, `MTurkR` can also be used to notify the relevant respondents about the follow-up survey via email
+                    
                     ```r
                     email.subject <- paste("Example Email Subject here")
                     email.message <- 
@@ -182,6 +191,7 @@ The checklist also contains a number of example images and `R` code designed to 
                                                
                     table(recontact_email_out$Valid)
                     ```
+                    
                     * When recontacting workers, save the recontact output (`recontact_assign_out` and `recontact_email_out`in the above example) and email text (`email.subject` and `email.message` in the above example) with other data files
         6. Specify Design Layout
             1. Paste and format study description into the "Design Layout" editor (the appended default format is recommended; click the "Source" button and paste the entirety of the below HTML code into the editor)
@@ -205,7 +215,7 @@ The checklist also contains a number of example images and `R` code designed to 
             5. Once all aspects of the HIT are confirmed, select "Purchase & Publish"; the HIT's progress may now be monitored by navigating to the "Manage" tab at the navigation bar at the top of the MTurk Requester page
         5. Confirm the validity of the pilot study using Qualtrics and MTurk data (the latter of which can be accessed via Manage &rarr; Results) and potential MTurker feedback, and correct any remaining errors
     2. Full distribution -- once the pilot study has been completed and accuracy of all design elements and data are confirmed, the study may be distributed to the entire subject pool
-        1. Given a flawless pilot study, launch the HIT following the relevant instructions in Section 4.i., on *n* &minus; *k* subjects, where *n* refers to the total number of subjects targeted for the study, and *k* refers to the number of subjects included in the pilot
+        1. Given a flawless pilot study, launch the HIT following the relevant instructions in Section 4.i., on *n* - *k* subjects, where *n* refers to the total number of subjects targeted for the study, and *k* refers to the number of subjects included in the pilot
             1. Subjects from the pilot stage must be excluded using a new qualification type (which can be assigned in `MTurkR`)
         2. Given the unlikely possibility of a problematic pilot study, the researcher must correct all apparent errors; depending on the severity, the researcher may choose to proceed according to one of the following approaches
             1. Re-pilot the study, using a separate pilot group
