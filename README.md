@@ -52,7 +52,7 @@ The software listed below is needed to build the SOP:
 * [`pandoc`](http://pandoc.org) & [`pandoc-citeproc`](https://hackage.haskell.org/package/pandoc-citeproc)
 * [`pdflatex`](https://www.tug.org/applications/pdftex/) & [`bibtex`](http://www.bibtex.org)
 
-**However, it's possible to work and build single chapters without most of these dependencies.** 
+**However, it's possible to work on and build single chapters without most of these dependencies.** 
 
 ### Dependencies on Mac OS
 
@@ -62,7 +62,7 @@ The software listed below is needed to build the SOP:
 xcode-select -p
 ```
 
-If they are install, this should return `/Applications/Xcode.app/Contents/Developer`. If not, then you need to install it with:
+If they are installed, this should return `/Applications/Xcode.app/Contents/Developer`. If not, then you need to install it with:
 
 ```shell
 xcode-select --install
