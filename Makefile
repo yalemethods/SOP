@@ -1,4 +1,6 @@
 CHAPTERS = \
+	example-latex \
+	example-md \
 	mturk
 
 CHAPTER_SOURCE = $(addprefix source-,$(CHAPTERS))
