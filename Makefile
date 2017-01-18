@@ -1,18 +1,10 @@
-CHAPTERS = \
-	example-latex \
-	example-md \
-	mturk
-
+CHAPTERS = $(shell cat chapters.txt)
 CHAPTER_ALL = $(addprefix all-,$(CHAPTERS))
 CHAPTER_SOURCE = $(addprefix source-,$(CHAPTERS))
 CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
 CHAPTER_PDF = $(addprefix pdf-,$(CHAPTERS))
 
 .PHONY : clean all source html pdf $(CHAPTER_SOURCE) $(CHAPTER_HTML) $(CHAPTER_PDF)
-
-clean :
-	rm -rf bin
-
 
 # Make all
 
@@ -87,3 +79,9 @@ bin/pdf :
 
 bin/tex :
 	mkdir -p bin/tex
+
+
+# Clean
+
+clean :
+	rm -rf bin
