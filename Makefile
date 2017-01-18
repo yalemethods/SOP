@@ -3,6 +3,7 @@ CHAPTERS = \
 	example-md \
 	mturk
 
+CHAPTER_ALL = $(addprefix all-,$(CHAPTERS))
 CHAPTER_SOURCE = $(addprefix source-,$(CHAPTERS))
 CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
 CHAPTER_PDF = $(addprefix pdf-,$(CHAPTERS))
@@ -13,6 +14,10 @@ all : source html pdf
 
 clean :
 	rm -rf bin
+
+# Make all
+
+$(CHAPTER_ALL) : all-% : source-% html-% pdf-%
 
 
 # Make sources
