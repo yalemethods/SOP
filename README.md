@@ -62,7 +62,7 @@ The software listed below is needed to build the SOP:
 xcode-select -p
 ```
 
-If they are installed, this should return `/Applications/Xcode.app/Contents/Developer`. If not, then you need to install it with:
+If they are installed, this should return `/Applications/Xcode.app/Contents/Developer`. If not, then you need to install them with:
 
 ```shell
 xcode-select --install
