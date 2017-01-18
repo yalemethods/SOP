@@ -8,14 +8,15 @@ CHAPTER_SOURCE = $(addprefix source-,$(CHAPTERS))
 CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
 CHAPTER_PDF = $(addprefix pdf-,$(CHAPTERS))
 
-.PHONY : all clean source html pdf $(CHAPTER_SOURCE) $(CHAPTER_HTML) $(CHAPTER_PDF)
-
-all : source html pdf
+.PHONY : clean all source html pdf $(CHAPTER_SOURCE) $(CHAPTER_HTML) $(CHAPTER_PDF)
 
 clean :
 	rm -rf bin
 
+
 # Make all
+
+all : source html pdf
 
 $(CHAPTER_ALL) : all-% : source-% html-% pdf-%
 
@@ -50,6 +51,7 @@ bin/html/%.html : bin/html %/source.md %/bibliography.bib
 
 bin/html :
 	mkdir -p bin/html
+
 
 # Make pdf
 
