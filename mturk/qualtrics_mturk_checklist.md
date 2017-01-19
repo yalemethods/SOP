@@ -17,7 +17,7 @@ All survey experiments to be carried out in Qualtrics using MTurk should first p
  * Presentation/discussion. A draft of the survey instrument(s) should be presented to a senior colleague or professor with experience running surveys in Qualtrics using MTurk. When conducting research as part of a research lab, drafts should be presented before the lab, with PI(s) present
  * IRB exemption/approval. Following presentation or workshopping, the amended instrument(s) must receive IRB exemption/approval. For research conducted with coauthors affiliated with separate institutions, researchers must receive IRB exemption/approval from each institution.
  * Pre-analysis plan. Development and archiving of a pre-analysis plan (PAP) prior to data collection is recommended. Online registries include the Evidence in Governance and Politics (EGAP) [registry](http://egap.org/register-your-design) and the American Economic Association's [registry](https://www.socialscienceregistry.org/) for randomized controlled trials (AER RCT). In general, we recommend following the Standard operating procedures for Don Green’s lab at
-Columbia (@lin2015standard) for analysis of experiments. 
+Columbia [@lin2015standard] for analysis of experiments. 
  
  
     
