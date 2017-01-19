@@ -1,32 +1,38 @@
 CHAPTERS = $(shell cat chapters.txt)
 CHAPTER_ALL = $(addprefix all-,$(CHAPTERS))
-CHAPTER_SOURCE = $(addprefix source-,$(CHAPTERS))
+CHAPTER_MD = $(addprefix md-,$(CHAPTERS))
 CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
 CHAPTER_PDF = $(addprefix pdf-,$(CHAPTERS))
 
-.PHONY : clean all source html pdf $(CHAPTER_SOURCE) $(CHAPTER_HTML) $(CHAPTER_PDF)
+.PHONY : clean all md html pdf $(CHAPTER_MD) $(CHAPTER_HTML) $(CHAPTER_PDF)
 
 # Make all
 
-all : source html pdf
+all : md html pdf
 
-$(CHAPTER_ALL) : all-% : source-% html-% pdf-%
+$(CHAPTER_ALL) : all-% : md-% html-% pdf-%
 
 
-# Make sources
+# Make Markdown
 
-source : $(CHAPTER_SOURCE)
+md : $(CHAPTER_MD)
 
-$(CHAPTER_SOURCE) : source-% : %/assets %/source.md %/bibliography.bib
+$(CHAPTER_MD) : md-% : bin/md/% bin/md/%.md bin/md/%.bib
 
-%/assets : %
+bin/md/% : % bin/md
 	cd $< && $(MAKE) assets
+	cp -R $(<)/$(<) $@
 
-%/source.md : %
-	cd $< && $(MAKE) source.md
+bin/md/%.md : % bin/md
+	cd $< && $(MAKE) source
+	pandoc $(<)/$(<).md -o $@
 
-%/bibliography.bib : %
-	cd $< && $(MAKE) bibliography.bib
+bin/md/%.bib : % bin/md
+	cd $< && $(MAKE) bibliography
+	cp -R $(<)/$(<).bib $@
+
+bin/md :
+	mkdir -p bin/md
 
 
 # Make html
@@ -35,11 +41,11 @@ html : $(CHAPTER_HTML)
 
 $(CHAPTER_HTML) : html-% : bin/html/% bin/html/%.html
 
-bin/html/% : %/assets bin/html
+bin/html/% : bin/md/% bin/html
 	cp -R $< $@
 
-bin/html/%.html : bin/html %/source.md %/bibliography.bib
-	pandoc -s --mathjax --filter pandoc-citeproc --bibliography $(*F)/bibliography.bib $(*F)/source.md -o $@
+bin/html/%.html : bin/html bin/md/%.md bin/md/%.bib
+	pandoc -s --mathjax --filter pandoc-citeproc --bibliography bin/md/$(*F).bib bin/md/$(*F).md -o $@
 
 bin/html :
 	mkdir -p bin/html
@@ -58,7 +64,7 @@ bin/pdf/%.pdf : bin/pdf bin/tex/% bin/tex/%.tex bin/tex/%.bib
 	cd bin/tex && pdflatex $(*F) && pdflatex $(*F)
 	cp -R bin/tex/$(*F).pdf $@
 
-bin/tex/% : %/assets bin/tex
+bin/tex/% : bin/md/% bin/tex
 	cp -R $< $@
 
 bin/tex/%.tex : bin/tex/%.md bin/tex/%.bib
@@ -68,10 +74,10 @@ bin/tex/%.tex : bin/tex/%.md bin/tex/%.bib
 		cd bin/tex && pandoc -s --listings $(*F).md -o $(*F).tex; \
 	fi
 
-bin/tex/%.md : %/source.md bin/tex
+bin/tex/%.md : bin/md/%.md bin/tex
 	cp -R $< $@
 
-bin/tex/%.bib : %/bibliography.bib bin/tex
+bin/tex/%.bib : bin/md/%.bib bin/tex
 	cp -R $< $@
 
 bin/pdf :
