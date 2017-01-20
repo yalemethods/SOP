@@ -149,13 +149,13 @@ Once the Qualtrics survey is in concordance with the checklist items enumerated 
 		* Include additional qualification type based on Worker ID collected in the preceding wave(s)
 		* Qualifications can be assigned using `MTurkR`, which may also be used to recontact workers; first install and load the `MTurkR` package:
                     
-                    ```r
-                    install.packages("devtools")
-                    library(devtools)
-                    install_github(repo="MTurkR", username = "leeper")
+      ```r
+      install.packages("devtools")
+      library(devtools)
+      install_github(repo="MTurkR", username = "leeper")
                     
                     library(MturkR)
-                    ```
+      ```
                     
 			Then, specify the vector of unique IDs to be used for recontacting respondents to the preceding wave(s):
                     
