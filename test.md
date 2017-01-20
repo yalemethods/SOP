@@ -270,7 +270,7 @@ In general, if MTurk workers are not able to complete the survey or HIT due to s
 
 # Appendix
 
-## MTurk HIT default format HTML code
+## *MTurk HIT default format HTML code*
 Below is the recommended default format for an MTurk HIT for survey research; note that the format is adapted from an MTurk template:
 
 ```html
@@ -473,4 +473,4 @@ Additions planned for upcoming versions:
     - stop running ads?
     - in any/all case(s), be sure to still pay people
 -->
-[link](#Using the Qualtrics Survey Platform with Recruitment via MTurk)
+[link](#integration-with-mturk)
