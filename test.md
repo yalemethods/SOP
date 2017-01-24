@@ -312,7 +312,13 @@ Once the pilot study has been completed and accuracy of all design elements and 
         ```
 	
 		The researcher can then assign HITs using a repeat loop. The below code modifies the aforementioned `MTurkR` [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing) by incorporating limited changes (the majority of the code below reproduces the `MTurkR` version, verbatim):
-testtest
+		
+		* Alterations to some object names.
+		* Additional and edited commenting based on the original `MTurkR` commenting.
+		* A text prompt at the conclusion of each iteration of the loop requiring the researcher to manually proceed to successive iterations of assignment, to cease assignment, or to view results.
+	
+	    In order to assign the HITs, the researcher must now run the following code:
+		
         ```r
         repeat {
 	    # Obtain the number of pending assignments.
@@ -399,6 +405,7 @@ testtest
 
 		Note that the augmented code allows the researcher to examine output following each iteration of the repeat loop by specifying `"more"` upon receiving the relevant text prompt. To wit, the code could also be altered with minor modifications to require researcher approval for the creation of *each* subsequent. 
 
+## *When Things Go Wrong* 
 
 * Given the unlikely possibility of a problematic pilot study, the researcher must correct all apparent errors; depending on the severity, the researcher may choose to proceed according to one of the following approaches:
 	
@@ -408,8 +415,6 @@ testtest
 		
 		* The relaunched HIT should exclude the *k* subjects from the flawed pilot study.
 
-
-## *When Things Go Wrong* 
 Sometimes, even with extensive alpha- and beta-testing, surveys do not behave in the same way when distributed on MTurk as they do during testing. Piloting surveys and rolling out surveys in tranches, as discussed above (see [Piloting](#piloting) and [Full Distribution](#full-distribution)), should limit damage. 
 
 Carefully monitor responses as they come in. If there is a problem with survey flow, cancel the MTurk HIT so that no new workers can accept it. Leave the Qualtrics survey open until all MTurk workers completing the assignment can complete the survey and receive an end-of-survey confirmation code. Once all workers have completed the survey, pause response collection in Qualtrics. 
