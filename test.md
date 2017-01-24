@@ -284,22 +284,22 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	
 		The researcher must now create two HIT types---one with the exclusion requirement (`qual_req`), and one without:
 	
-             ```r
-   	     no_qual_hit <- RegisterHITType(title = "Example Title",
-	     				    description = "Example description.",
-	     				    reward = ".50", 
-	     				    duration = seconds(hours = 1), 
-	     				    auto.approval.delay = seconds(hours = 8),
-	     				    keywords = "example keywords")
+        ```r
+        no_qual_hit <- RegisterHITType(title = "Example Title",
+	     			       description = "Example description.",
+	     			       reward = ".50", 
+	     			       duration = seconds(hours = 1), 
+	     			       auto.approval.delay = seconds(hours = 8),
+	     			       keywords = "example keywords")
                             
-   	     hit_qual <- RegisterHITType(title = "Example Title",
-	     				 description = "Example description.",
-	     				 reward = ".50", 
-	     				 duration = seconds(hours = 1),
-	     				 auto.approval.delay = seconds(hours = 8),
-	     				 keywords = "example keywords",
-	     				 qual.req = qual_req)
-   	     ```
+        hit_qual <- RegisterHITType(title = "Example Title",
+	     			    description = "Example description.",
+	     			    reward = ".50", 
+	     			    duration = seconds(hours = 1),
+	     			    auto.approval.delay = seconds(hours = 8),
+	     			    keywords = "example keywords",
+	     			    qual.req = qual_req)
+        ```
 	
 		The first batch of HITs is assigned using `no_qual_hit`, i.e., without excluding workers; assignment then proceeds iteratively, such that, in each wave, only workers who have *not* completed the HIT can be assigned; this is performed using a repeat loop. Prior to running the loop, the researcher must also set objects to record the number of HITs completed (a counter which is, intuitively, initially set to 0), a list object that will contain all assignments (i.e., assigned workers' IDs), and the number of assignments per batch (to be set by the researcher):
 	
