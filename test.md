@@ -263,7 +263,6 @@ Once the pilot study has been completed and accuracy of all design elements and 
 * Given a flawless pilot study, launch the HIT following the relevant instructions in [Piloting](#piloting), on *n* - *k* subjects, where *n* refers to the total number of subjects targeted for the study, and *k* refers to the number of subjects included in the pilot.
 	* Subjects from the pilot stage must be excluded using a new qualification type (which can be assigned in [`MTurkR`](https://github.com/cloudyr/MTurkR/wiki)).
 	* It is recommended that the full distribution of the survey still be rolled out in tranches of no more than 20 respondents each, and that the researcher monitor responses. `MTurkR` provides a functionality to automate sequential bulk HIT assignments of fewer than 10 participants each (which allows the researcher to circumvent MTurk's 20% surcharge on bulk HIT assignments). The code excludes workers who completed the previous HITs. `MTurkR` provides [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing); the code is augmented and reproduced below with additional exposition. 
-	
 	The researcher must first specify a number of assignments (e.g., *n* = 1000) and create a qualification type to be assigned to workers who have already completed the HIT:
 	
         ```r
