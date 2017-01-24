@@ -319,9 +319,9 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	
 	    In order to assign the HITs, the researcher must now run the following code:
 
-	```r
-	print("hi")    
-	```
+	        ```r
+	        print("hi")    
+	        ```
 		
             ```r
             repeat {
