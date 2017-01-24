@@ -351,6 +351,13 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	        # create another HIT, this time using the `hit_qual` HIT type (i.e., 
 	        # excluding subjects who completed the HIT).
 	        if (completed < n_assignments) {    
+		    
+		    # If fewer than assignments_per_batch assignments remain, reassign
+		    # the object to the new amount to avoid over-recruitment.
+		    if (n_assignments - completed > assignments_per_batch){
+		        assignments_per_batch <- n_assignments - completed
+		    }
+		    
 	            hit <- CreateHIT(hit.type = hit_qual$HITTypeId,
                        		     assignments = assignments_per_batch,
                        		     expiration = seconds(days = 4),
