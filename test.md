@@ -262,7 +262,7 @@ Once the pilot study has been completed and accuracy of all design elements and 
 
 * Given a flawless pilot study, launch the HIT following the relevant instructions in [Piloting](#piloting), on *n* - *k* subjects, where *n* refers to the total number of subjects targeted for the study, and *k* refers to the number of subjects included in the pilot.
 	* Subjects from the pilot stage must be excluded using a new qualification type (which can be assigned in [`MTurkR`](https://github.com/cloudyr/MTurkR/wiki)).
-	* It is recommended that the full distribution of the survey still be rolled out in tranches of no more than 20 respondents each, and that the researcher monitor responses. `MTurkR` provides a functionality to automate sequential bulk HIT assignments of fewer than 10 participants each (which allows the researcher to circumvent MTurk's 20% surcharge on bulk HIT assignments). The code excludes workers who completed the previous HITs. `MTurkR` provides [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing); the code is augmented and reproduced below with additional exposition.  
+	* It is recommended that the full distribution of the survey still be rolled out in tranches of no more than 20 respondents each, and that the researcher monitor responses. `MTurkR` provides a functionality to automate sequential bulk HIT assignments of fewer than 10 participants each (this is `MTurkR`'s recommendation, as assigning HITs in batches of fewer than 10 allows the researcher to circumvent MTurk's 20% surcharge on bulk HIT assignments). The code excludes workers who completed the previous HITs. `MTurkR` provides [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing); the code is augmented and reproduced below with additional exposition.  
 	
 		The researcher must first specify a number of assignments (e.g., *n* = 1000) and create a qualification type to be assigned to workers who have already completed the HIT:
 	
@@ -302,7 +302,7 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	```
 	    The first batch of HITs is assigned using `no_qual_hit`, i.e., without excluding workers; assignment then proceeds iteratively, such that, in each wave, only workers who have *not* completed the HIT can be assigned; this is performed using a repeat loop. Prior to running the loop, the researcher must also set objects to record the number of HITs completed (a counter which is, intuitively, initially set to 0), a list object that will contain all assignments (i.e., assigned workers' IDs), and the number of assignments per batch (to be set by the researcher):
 	
-	```r
+        ```r
 	completed <- 0
 	
 	all_assigns <- list()
@@ -310,20 +310,100 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	assignments_per_batch <- 9
 	```
 	
-	The researcher can then assign HITs using a repeat loop. The below code modifies the aforementioned `MTurkR` [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing) by incorporating:
+	The researcher can then assign HITs using a repeat loop. The below code modifies the aforementioned `MTurkR` [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing) by incorporating limited changes (the majority of the code below reproduces the `MTurkR` version, verbatim):
 	
-	* Additional commenting.
-	* A text prompt at the conclusion of iteration of the loop requiring the researcher to manually proceed to successive iteration of assignment, to cease assignment, or to view results.
+	* Alterations to some object names.
+	* Additional and edited commenting based on the original `MTurkR` commenting.
+	* A text prompt at the conclusion of each iteration of the loop requiring the researcher to manually proceed to successive iterations of assignment, to cease assignment, or to view results.
 	
-	In order to run the loop, the researcher will run the following code:
+	In order to assign the HITs, the researcher must now run the following code:
 	
 	```r
-	
+	repeat {
+	    # Obtain the number of pending assignments.
+	    pending_assignments <- 
+	        GetHIT(hit$HITId, response.group = "HITAssignmentSummary",
+		       verbose = FALSE)$HITs$NumberOfAssignmentsPending
+  
+	    # If all assignments in the batch have been completed,then retrieve the 
+	    # submitted assignments.
+	    if (as.numeric(pending_assignments) == 0) {
+	        assignment_iter <- length(all_assigns) + 1
+	        all_assigns[[assignment_iter]] <- GetAssignments(hit = hit$HITId)
+
+	        # Assign the qualification of `completed_qual` to all workers who have 
+	        # completed the HIT in this block.
+	        AssignQualification(completed_qual$QualificationTypeId,
+				    all_assigns[[assignment_iter]]$WorkerId, 
+				    verbose = FALSE)
+    
+	        # Add the number of completed assignments in the batch to the total number
+	        # of completed assignments.
+	        completed <- completed + assignments_per_batch
+    
+	        # Optionally display the total assignments completed thus far.
+	        if (getOption("MTurkR.verbose")) {
+	            message(paste("Total assignments completed: ", completed, "\n", sep=""))
+	        }
+    
+	        # If the number of completed assignments is less than the specified n,
+	        # create another HIT, this time using the `hit_qual` HIT type (i.e., 
+	        # excluding subjects who completed the HIT).
+	        if (completed < n_assignments) {    
+	            hit <- CreateHIT(hit.type = hit_qual$HITTypeId,
+                       		     assignments = assignments_per_batch,
+                       		     expiration = seconds(days = 4),
+                       		     hitlayoutid = "LAYOUT_ID_HERE")
+
+	            # Prompt the researcher whether to proceed, to stop, or to display further
+	            # information.
+	            response <- readline(prompt = "Assign new wave (yes/no/more)?")
+      
+	            # If the response is some variant of "no," stop the loop. 
+	            if(response %in% c("no", "n", "No", "N")){
+	               break
+	            }
+
+	            # If the response is some variant of "more," print the number of 
+	            # assignments completed thus far.
+	            if(response %in% c("more", "More")){
+	               assigns_list <- do.call("rbind", all_assigns)
+	               print(assigns_list)
+        
+	               # Prompt the researcher again (excluding the "more" option).
+	               response <- readline(prompt = "Assign new wave (yes/no)?")
+        
+	               if(response %in% c("no", "n", "No", "N")){
+	                  break
+	               }
+	            }
+
+	            # MTurkR's implementation builds latency time into the repeat loop between
+	            # iterations; this is the time in seconds to wait before repeating the 
+	            # loop and checking assignments again.
+	            Sys.sleep(180)
+      
+	            # If the number of assignments meets the specified n, break the loop.
+	        } else {
+	          break
+	        }
+    
+	    # If the number of assignments in the batch has not yet been reached, wait
+	    # 30 seconds before repeating the loop and checking assignments again.
+	    } else {
+	      Sys.sleep(30)
+	    }
+	}
 	```
         
+	The researcher may now examine the data from all HIT assignments (i.e., all assignments in all batches) as a `data.frame` object in `R`:
 
-	However, note that the loop does not break between HITs. The code can be modified review results from each HIT, and approve creation of a subsequent HIT. This can also be completed by creating each HIT through the MTurk interface. 
-		* Note that `MTurkR` recommends tranches of fewer than 10 respondents, as MTurk places a surcharge on HITs including 10 or more assignments.
+	```r
+	assigns_list <- do.call("rbind", all_assigns)
+	```
+	
+	Note that the augmented code allows the researcher to examine output following each iteration of the repeat loop by specifying `"more"` upon receiving the relevant text prompt. To wit, the code could also be altered with minor modifications to require researcher approval for the creation of *each* subsequent. 
+
 * Given the unlikely possibility of a problematic pilot study, the researcher must correct all apparent errors; depending on the severity, the researcher may choose to proceed according to one of the following approaches:
 	* Re-pilot the study, using a separate pilot group.
 	* Proceed according to Points 1 - 3 in [Full Distribution](#full-distribution).
