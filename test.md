@@ -318,10 +318,6 @@ Once the pilot study has been completed and accuracy of all design elements and 
 		* A text prompt at the conclusion of each iteration of the loop requiring the researcher to manually proceed to successive iterations of assignment, to cease assignment, or to view results.
 	
 	    In order to assign the HITs, the researcher must now run the following code:
-
-        ```r
-        print("hi")    
-        ```
 		
         ```r
         repeat {
@@ -401,13 +397,13 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	}
 	```
         
-	The researcher may now examine the data from all HIT assignments (i.e., all assignments in all batches) as a `data.frame` object in `R`:
+	    The researcher may now examine the data from all HIT assignments (i.e., all assignments in all batches) as a `data.frame` object in `R`:
 
-	        ```r
-	        assigns_list <- do.call("rbind", all_assigns)
-	        ```
+	```r
+	assigns_list <- do.call("rbind", all_assigns)
+	```
 	
-	Note that the augmented code allows the researcher to examine output following each iteration of the repeat loop by specifying `"more"` upon receiving the relevant text prompt. To wit, the code could also be altered with minor modifications to require researcher approval for the creation of *each* subsequent. 
+	    Note that the augmented code allows the researcher to examine output following each iteration of the repeat loop by specifying `"more"` upon receiving the relevant text prompt. To wit, the code could also be altered with minor modifications to require researcher approval for the creation of *each* subsequent. 
 
 * Given the unlikely possibility of a problematic pilot study, the researcher must correct all apparent errors; depending on the severity, the researcher may choose to proceed according to one of the following approaches:
 	* Re-pilot the study, using a separate pilot group.
