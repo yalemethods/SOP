@@ -405,9 +405,7 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	
 	    Note that the augmented code allows the researcher to examine output following each iteration of the repeat loop by specifying `"more"` upon receiving the relevant text prompt. To wit, the code could also be altered with minor modifications to require researcher approval for the creation of *each* subsequent.
 
-# TESTTEST
-
-* Given the unlikely possibility of a problematic pilot study, the researcher must correct all apparent errors; depending on the severity, the researcher may choose to proceed according to one of the following approaches:
+1. Given the unlikely possibility of a problematic pilot study, the researcher must correct all apparent errors; depending on the severity, the researcher may choose to proceed according to one of the following approaches:
 	* Re-pilot the study, using a separate pilot group.
 	* Proceed according to Points 1 - 3 in [Full Distribution](#full-distribution).
 	* Proceed by relaunching the HIT with *n* subjects.
