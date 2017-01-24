@@ -318,7 +318,18 @@ Once the pilot study has been completed and accuracy of all design elements and 
 		* A text prompt at the conclusion of each iteration of the loop requiring the researcher to manually proceed to successive iterations of assignment, to cease assignment, or to view results.
 	
 		In order to assign the HITs, the researcher must now run the following code:
-	
+                
+		
+            ```r
+	    print("hi")    
+            ```
+		```r
+	        print("hi")    
+                ```
+		     ```r
+	            print("hi")    
+                    ```
+		
             ```r
             repeat {
 	        # Obtain the number of pending assignments.
