@@ -320,86 +320,82 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	    In order to assign the HITs, the researcher must now run the following code:
 
 	    ```r
-	    print("hi")
-	    ```
-	    
-    	        ```r
-                repeat {
-	            # Obtain the number of pending assignments.
-	            pending_assignments <- 
-	                GetHIT(hit$HITId, response.group = "HITAssignmentSummary",
-		               verbose = FALSE)$HITs$NumberOfAssignmentsPending
+	    repeat {
+	    # Obtain the number of pending assignments.
+	    pending_assignments <- 
+	        GetHIT(hit$HITId, response.group = "HITAssignmentSummary",
+		       verbose = FALSE)$HITs$NumberOfAssignmentsPending
   
-	            # If all assignments in the batch have been completed,then retrieve the 
-	            # submitted assignments.
-	            if (as.numeric(pending_assignments) == 0) {
-	                assignment_iter <- length(all_assigns) + 1
-	                all_assigns[[assignment_iter]] <- GetAssignments(hit = hit$HITId)
+	    # If all assignments in the batch have been completed,then retrieve the 
+	    # submitted assignments.
+	    if (as.numeric(pending_assignments) == 0) {
+	        assignment_iter <- length(all_assigns) + 1
+	        all_assigns[[assignment_iter]] <- GetAssignments(hit = hit$HITId)
 
-	                # Assign the qualification of `completed_qual` to all workers who have 
-	                # completed the HIT in this block.
-	                AssignQualification(completed_qual$QualificationTypeId,
-				            all_assigns[[assignment_iter]]$WorkerId, 
-				            verbose = FALSE)
+	        # Assign the qualification of `completed_qual` to all workers who have 
+	        # completed the HIT in this block.
+	        AssignQualification(completed_qual$QualificationTypeId,
+				    all_assigns[[assignment_iter]]$WorkerId, 
+				    verbose = FALSE)
     
-	                # Add the number of completed assignments in the batch to the total number
-	                # of completed assignments.
-	                completed <- completed + assignments_per_batch
+	        # Add the number of completed assignments in the batch to the total number
+	        # of completed assignments.
+	        completed <- completed + assignments_per_batch
     
-	                # Optionally display the total assignments completed thus far.
-	                if (getOption("MTurkR.verbose")) {
-	                    message(paste("Total assignments completed: ", completed, "\n", sep=""))
-	                }
+	        # Optionally display the total assignments completed thus far.
+	        if (getOption("MTurkR.verbose")) {
+	            message(paste("Total assignments completed: ", completed, "\n", sep=""))
+	        }
     
-	                # If the number of completed assignments is less than the specified n,
-	                # create another HIT, this time using the `hit_qual` HIT type (i.e., 
-	                # excluding subjects who completed the HIT).
-	                if (completed < n_assignments) {    
-	                    hit <- CreateHIT(hit.type = hit_qual$HITTypeId,
-                       		             assignments = assignments_per_batch,
-                       		             expiration = seconds(days = 4),
-                       		             hitlayoutid = "LAYOUT_ID_HERE")
+	        # If the number of completed assignments is less than the specified n,
+	        # create another HIT, this time using the `hit_qual` HIT type (i.e., 
+	        # excluding subjects who completed the HIT).
+	        if (completed < n_assignments) {    
+	            hit <- CreateHIT(hit.type = hit_qual$HITTypeId,
+                       		     assignments = assignments_per_batch,
+                       		     expiration = seconds(days = 4),
+                       		     hitlayoutid = "LAYOUT_ID_HERE")
 
-	                    # Prompt the researcher whether to proceed, to stop, or to display further
-	                    # information.
-	                    response <- readline(prompt = "Assign new wave (yes/no/more)?")
+	            # Prompt the researcher whether to proceed, to stop, or to display further
+	            # information.
+	            response <- readline(prompt = "Assign new wave (yes/no/more)?")
       
-	                    # If the response is some variant of "no," stop the loop. 
-	                    if(response %in% c("no", "n", "No", "N")){
-	                       break
-	                    }
+	            # If the response is some variant of "no," stop the loop. 
+	            if(response %in% c("no", "n", "No", "N")){
+	               break
+	            }
 
-	                    # If the response is some variant of "more," print the number of 
-	                    # assignments completed thus far.
-	                    if (response %in% c("more", "More")){
-	                        assigns_list <- do.call("rbind", all_assigns)
-	                        print(assigns_list)
+	            # If the response is some variant of "more," print the number of 
+	            # assignments completed thus far.
+	            if (response %in% c("more", "More")){
+	                assigns_list <- do.call("rbind", all_assigns)
+	                print(assigns_list)
         
-	                        # Prompt the researcher again (excluding the "more" option).
-	                        response <- readline(prompt = "Assign new wave (yes/no)?")
+	                # Prompt the researcher again (excluding the "more" option).
+	                response <- readline(prompt = "Assign new wave (yes/no)?")
         
-	                        if(response %in% c("no", "n", "No", "N")){
-	                          break
-	                        }
-	                    }
-
-	                    # MTurkR's implementation builds latency time into the repeat loop between
-	                    # iterations; this is the time in seconds to wait before repeating the 
-	                    # loop and checking assignments again.
-	                    Sys.sleep(180)
-      
-	                    # If the number of assignments meets the specified n, break the loop.
-	                } else {
+	                if(response %in% c("no", "n", "No", "N")){
 	                  break
-	       	        }
+	                }
+	            }
+
+	            # MTurkR's implementation builds latency time into the repeat loop between
+	            # iterations; this is the time in seconds to wait before repeating the 
+	            # loop and checking assignments again.
+	            Sys.sleep(180)
+      
+	            # If the number of assignments meets the specified n, break the loop.
+	        } else {
+	          break
+	        	        }
     
-	            # If the number of assignments in the batch has not yet been reached, wait
-	            # 30 seconds before repeating the loop and checking assignments again.
-	            } else {
-	              Sys.sleep(30)
-	            }
-	            }
-	            ```
+	    # If the number of assignments in the batch has not yet been reached, wait
+	    # 30 seconds before repeating the loop and checking assignments again.
+	    } else {
+	      Sys.sleep(30)
+	    }
+		}
+	    ```
         
 	   The researcher may now examine the data from all HIT assignments (i.e., all assignments in all batches) as a `data.frame` object in `R`:
 
