@@ -264,7 +264,7 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	* Subjects from the pilot stage must be excluded using a new qualification type (which can be assigned in [`MTurkR`](https://github.com/cloudyr/MTurkR/wiki)).
 	* It is recommended that the full distribution of the survey still be rolled out in tranches of no more than 20 respondents each, and that the researcher monitor responses. `MTurkR` provides a functionality to automate sequential bulk HIT assignments of fewer than 10 participants each (which allows the researcher to circumvent MTurk's 20% surcharge on bulk HIT assignments). The code excludes workers who completed the previous HITs. `MTurkR` provides [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing); the code is augmented and reproduced below with additional exposition.  
 	
-	The researcher must first specify a number of assignments (e.g., *n* = 1000) and create a qualification type to be assigned to workers who have already completed the HIT:
+		The researcher must first specify a number of assignments (e.g., *n* = 1000) and create a qualification type to be assigned to workers who have already completed the HIT:
 	
         ```r
         n_assignments <- 1000
@@ -280,7 +280,7 @@ Once the pilot study has been completed and accuracy of all design elements and 
                                              value = "")
         ```
 	
-	    The object `completed_qual` creates the qualification type for all workers who have completed the HIT, and `qual_req` will later be used to exclude these workers workers (i.e., in successive waves of assignment, only workers who have not already completed the HIT will be eligible to complete the HIT).
+	    The object `completed_qual` creates the qualification type for all workers who have completed the HIT, and `qual_req` will later be used to exclude these workers workers (i.e., in successive waves of assignment, only workers who have not already completed the HIT will be eligible to complete the HIT).  
 	
 	    The researcher must now create two HIT types---one with the exclusion requirement (`qual_req`), and one without:
 	
@@ -300,7 +300,7 @@ Once the pilot study has been completed and accuracy of all design elements and 
 									 keywords = "example keywords",
 									 qual.req = qual_req)
 	```
-	The first batch of HITs is assigned using `no_qual_hit`, i.e., without excluding workers; assignment then proceeds iteratively, such that, in each wave, only workers who have *not* completed the HIT can be assigned; this is performed using a repeat loop. Prior to running the loop, the researcher must also set objects to record the number of HITs completed (a counter which is, intuitively, initially set to 0), a list object that will contain all assignments (i.e., assigned workers' IDs), and the number of assignments per batch (to be set by the researcher):
+	    The first batch of HITs is assigned using `no_qual_hit`, i.e., without excluding workers; assignment then proceeds iteratively, such that, in each wave, only workers who have *not* completed the HIT can be assigned; this is performed using a repeat loop. Prior to running the loop, the researcher must also set objects to record the number of HITs completed (a counter which is, intuitively, initially set to 0), a list object that will contain all assignments (i.e., assigned workers' IDs), and the number of assignments per batch (to be set by the researcher):
 	
 	```r
 	completed <- 0
