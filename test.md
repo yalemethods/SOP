@@ -282,9 +282,9 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	
 		The object `completed_qual` creates the qualification type for all workers who have completed the HIT, and `qual_req` will later be used to exclude these workers workers (i.e., in successive waves of assignment, only workers who have not already completed the HIT will be eligible to complete the HIT).  
 	
-	The researcher must now create two HIT types---one with the exclusion requirement (`qual_req`), and one without:
+		The researcher must now create two HIT types---one with the exclusion requirement (`qual_req`), and one without:
 	
-	    ```r
+            ```r
 	    no_qual_hit <- RegisterHITType(title = "Example Title",
     										 description = "Example description.",
     										 reward = ".50", 
@@ -301,15 +301,15 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	    								 qual.req = qual_req)
 	    ```
 	
-	    The first batch of HITs is assigned using `no_qual_hit`, i.e., without excluding workers; assignment then proceeds iteratively, such that, in each wave, only workers who have *not* completed the HIT can be assigned; this is performed using a repeat loop. Prior to running the loop, the researcher must also set objects to record the number of HITs completed (a counter which is, intuitively, initially set to 0), a list object that will contain all assignments (i.e., assigned workers' IDs), and the number of assignments per batch (to be set by the researcher):
+		The first batch of HITs is assigned using `no_qual_hit`, i.e., without excluding workers; assignment then proceeds iteratively, such that, in each wave, only workers who have *not* completed the HIT can be assigned; this is performed using a repeat loop. Prior to running the loop, the researcher must also set objects to record the number of HITs completed (a counter which is, intuitively, initially set to 0), a list object that will contain all assignments (i.e., assigned workers' IDs), and the number of assignments per batch (to be set by the researcher):
 	
-        ```r
-	completed <- 0
+            ```r
+            completed <- 0
 	
-	all_assigns <- list()
+            all_assigns <- list()
 	
-	assignments_per_batch <- 9
-	```
+            assignments_per_batch <- 9
+            ```
 	
 	The researcher can then assign HITs using a repeat loop. The below code modifies the aforementioned `MTurkR` [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing) by incorporating limited changes (the majority of the code below reproduces the `MTurkR` version, verbatim):
 	
