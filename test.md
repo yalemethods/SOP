@@ -403,7 +403,7 @@ Once the pilot study has been completed and accuracy of all design elements and 
 	    assigns_list <- do.call("rbind", all_assigns)
 	    ```
 	
-	    Note that the augmented code allows the researcher to examine output following each iteration of the repeat loop by specifying `"more"` upon receiving the relevant text prompt. To wit, the code could also be altered with minor modifications to require researcher approval for the creation of *each* subsequent.  
+	   Note that the augmented code allows the researcher to examine output following each iteration of the repeat loop by specifying `"more"` upon receiving the relevant text prompt. To wit, the code could also be altered with minor modifications to require researcher approval for the creation of *each* subsequent.  
 
 * Given the unlikely possibility of a problematic pilot study, the researcher must correct all apparent errors; depending on the severity, the researcher may choose to proceed according to one of the following approaches:
 	
@@ -721,7 +721,6 @@ editing-the-survey-link-project-template-in-the-ui.html --><!-- Bootstrap v3.0.3
 </body>
 </html>
 ```
--->
 
 
 <!--
