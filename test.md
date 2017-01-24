@@ -312,7 +312,10 @@ Once the pilot study has been completed and accuracy of all design elements and 
         ```
 	
 		The researcher can then assign HITs using a repeat loop. The below code modifies the aforementioned `MTurkR` [code and instructions](https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing) by incorporating limited changes (the majority of the code below reproduces the `MTurkR` version, verbatim):
-
+		
+		* Alterations to some object names.
+		* Additional and edited commenting based on the original `MTurkR` commenting.
+		* A text prompt at the conclusion of each iteration of the loop requiring the researcher to manually proceed to successive iterations of assignment, to cease assignment, or to view results.
 	
 	    In order to assign the HITs, the researcher must now run the following code:
 
