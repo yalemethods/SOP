@@ -322,9 +322,6 @@ Once the pilot study has been completed and accuracy of all design elements and 
 		```r
 	        print("hi")    
                 ```
-		     ```r
-	            print("hi")    
-                    ```
 		
             ```r
             repeat {
