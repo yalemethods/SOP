@@ -399,9 +399,9 @@ Once the pilot study has been completed and accuracy of all design elements and 
         
 	    The researcher may now examine the data from all HIT assignments (i.e., all assignments in all batches) as a `data.frame` object in `R`:
 
-	```r
-	assigns_list <- do.call("rbind", all_assigns)
-	``` 
+	    ```r
+	    assigns_list <- do.call("rbind", all_assigns)
+	    ``` 
 
 	    Note that the augmented code allows the researcher to examine output following each iteration of the repeat loop by specifying `"more"` upon receiving the relevant text prompt. To wit, the code could also be altered with minor modifications to require researcher approval for the creation of *each* subsequent. 
 
