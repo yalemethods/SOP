@@ -452,6 +452,10 @@ Despite careful design in both Qualtrics and MTurk, the researcher may find that
 	* In cases in which more than 20% of responses are missing, the researcher should create an indicator variable denoting missingness in the given variable.
 	* In all other cases, mean or mode imputation should be employed; it is recommended that the researcher use mean imputation for all ordinal or binary variables, whereas mode imputation is recommended for categorical/nominal variables.
 	The below `impute()` function will assess missingness in variables, and will perform imputation automatically, where appropriate (note that `impute()` performs mean imputation by default; the function will perform mode imputation if the researcher sets the `ord` argument to `FALSE`):
+        
+	```r
+	print("hello, world!")
+	```
 	
 	```r
     impute <- function(x, ord = TRUE) {
