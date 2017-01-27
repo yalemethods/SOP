@@ -47,7 +47,7 @@ When randomizing elements, *do not* select "Evenly Present Elements"; it is reco
         
 Meanwhile, *do* ensure that the Randomizer is set to present the correct number of elements to respondents. Ensure, as well, that other design features (e.g., branching) remain unchanged across randomized arms, where appropriate.                 
 
-![Randomizer Example](images/randomizer.jpg)  
+![Randomizer Example](mturk/mturk/randomizer.jpg)  
 
 In the case of randomizing answer-choice ordering (e.g., when randomly reversing question order), the researcher may use one of the following options:
 
@@ -73,20 +73,20 @@ Quotas may not perform as desired when many respondents begin taking the survey 
 #### End-of-survey. 
 At each point in the survey when respondents may be deemed ineligible to continue (based on consent, recruitment requirements, etc.), survey flow should direct ineligible respondents to an End-of-survey element. These elements can be customized using stored messages in the Qualtrics Library, so that respondents who end the survey prior to completion are not presented with an end-of-survey confirmation code for entry into MTurk. 
 
-![End of Survey Message Example](images/end_of_survey_message.jpg)
+![End of Survey Message Example](mturk/mturk/end_of_survey_message.jpg)
      
 End-of-survey confirmation codes can be generated immediately prior to the final End-of-survey element using a Web Service element, as below. 
 
-![Web Service Example](images/web_service.jpg)
+![Web Service Example](mturk/mturk/web_service.jpg)
                 
 Respondents who complete the survey should then receive an End-of-survey messages such that the confirmation code is piped into the message. Ensure that the Embedded Data term "called" in the Web Service element matches that defined in the message written and stored in the Qualtrics Library (see above image). 
 
-![End of Survey Example](images/eos.jpg)
+![End of Survey Example](mturk/mturk/eos.jpg)
 
 #### Anonymization. 
 Survey responses must be anonymized in accordance with IRB exemption/approval. Responses can be anonymized by checking the appropriate box in Survey Options &rarr; Survey Protection, as below.
 
-![Anonymization Example](images/anonymize.jpg)
+![Anonymization Example](mturk/mturk/anonymize.jpg)
     
 * Follow-up surveys. Follow-up surveys should always include either or both of the following elements, in confirmed working order: 
 	* An IRB-exempt/approved question or questions for matching respondents between waves.
@@ -98,7 +98,7 @@ Each survey question should feature appropriate validation using Validation Opti
 #### Images. 
 Images to be used in conjunction with, or in lieu of, question text should first be added to the Qualtrics Graphics Library, accessible by clicking Library &rarr; Graphics Library. (Images can be uploaded to the Graphics Library by clicking the Upload Graphic button). Once uploaded to the Graphics Library, images can be embedded in questions by opening the Rich Content Editor, and clicking the Insert Graphic button, as shown below. 
 
-![Insert Graphic Example](images/insert_graphic.jpg)
+![Insert Graphic Example](mturk/mturk/insert_graphic.jpg)
 
 #### Survey testing
 * Alpha testing. In alpha-testing, all attempts should be made to "break" the survey functionality, especially with conditional embedded data, validation, and input text. 
@@ -127,11 +127,11 @@ Once the Qualtrics survey is in concordance with the checklist items enumerated 
     
 * If not employing an MTurk default format, select "Other" from the format list on the left; then select "Create Project."
 
-![Create HIT Example](images/create_hit.jpg)
+![Create HIT Example](mturk/mturk/create_hit.jpg)
 	
 * Specify requirements for "Describe your HIT to Workers":
 
-	![Describe HIT Example](images/describe_hit.jpg)
+	![Describe HIT Example](mturk/mturk/describe_hit.jpg)
             
 	1. Specify a "HIT Title."
 	2. Specify a short "HIT description."
@@ -139,7 +139,7 @@ Once the Qualtrics survey is in concordance with the checklist items enumerated 
             
 * Specify requirements for "Setting up your HIT":
 
-	![Setting Up Your HIT Example](images/setting_up_your_hit.jpg)
+	![Setting Up Your HIT Example](mturk/mturk/setting_up_your_hit.jpg)
             
 	1. Specify "Reward per assignment" (i.e., the payment rate, per subject).
 	2. Specify "Number of assignments per HIT" (for a survey or survey experiment, this will correspond to the number of subjects to be recruited for the pilot or study---see [Piloting](#piloting) for further details; $.50/5 minutes is recommended).
@@ -149,7 +149,7 @@ Once the Qualtrics survey is in concordance with the checklist items enumerated 
             
 * Specify "Worker requirements."
 
-	![Worker Requirements Example](images/worker_requirements.jpg)
+	![Worker Requirements Example](mturk/mturk/worker_requirements.jpg)
 	
 	1. *Do not* "Require that Workers be Masters to do your HITs.
 		* Masters are not required for quality tasks, but cost appreciably more than standard MTurk workers.
