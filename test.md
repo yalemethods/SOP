@@ -454,11 +454,7 @@ Despite careful design in both Qualtrics and MTurk, the researcher may find that
 	The below `impute()` function will assess missingness in variables, and will perform imputation automatically, where appropriate (note that `impute()` performs mean imputation by default; the function will perform mode imputation if the researcher sets the `ord` argument to `FALSE`):
 	
 	    ```r
-	    print("hello, world!")
-	    ```
-	    
-	    ```r
-            impute <- function(x, ord = TRUE) {
+	    impute <- function(x, ord = TRUE) {
               if (ord) {
                 if (sum(is.na(x)) <= 20) {
                   x[is.na(x)] <- mean(x, na.rm = TRUE)
@@ -474,7 +470,7 @@ Despite careful design in both Qualtrics and MTurk, the researcher may find that
               }
               return(x)
             }
-            ```
+	    ```
 
 #### Recoding variables
 
