@@ -34,7 +34,7 @@ This includes basic proofreading as well as language considerations: the survey 
 
 The first question must always be a consent form; updated templates for consent forms are available at the website of the [Yale Human Research Protection Program](https://your.yale.edu/research-support/human-research). 
     
-For all "covariate" questions with appropriate analogues in the ANES/MTurkES survey instrument, it is recommended that the researcher use the ANES/MTurkES specification. The MTurkES specification was specifically designed for use on Qualtrics and MTurk. [[citation??]]
+For all "covariate" questions with appropriate analogues in the ANES (or online-formatted pseudo-ANES) survey instrument, it is recommended that the researcher use questions matching those specifications.
     
 At this stage, it is essential to ensure that survey questions aim at the appropriate inferential target, and that answer choices allow for clear measurement of the outcome of interest. A PAP may be helpful in determining if this is the case. When in doubt, the research should consult the established literature in the field for proper terminology, as well as with colleagues familiar with the topic. If there is no clear consensus, randomization of question wording or response options may be useful in testing. 
 
@@ -54,8 +54,8 @@ In the case of randomizing answer-choice ordering (e.g., when randomly reversing
 * Create two or more versions of the relevant question, and randomly assign respondents to view one version.
 	* Confirm that answer-choice codings are held constant across each permutation (i.e., irrespective of question/answer order, a given selection should always be represented with the same numeric code).
 		* If answer-choice codings are not properly coded prior to survey implementation, recode answer choices accordingly before downloading the resulting data; the Qualtrics system automatically updates the data file to accommodate the recoded choices.
-* [[Include directions to randomize answer choices]]
-* Alternative implementations using JavaScript are also available [[insert link to that one chunk]].
+* Click on the Advanced Question Options gear symbol on the left of the question to incorporate randomization, then click Randomization in the drop-down menu. For more complex randomization schemes (i.e., beyond randomizing the order of all answer choices, the functionality for which is provided by choosing "Randomize the order of all choices"), click the "Set Up Advanced Randomization" hyperlink next to the "Advanced Randomization" option; the order of specific questions can be randomized, while maintaining the order of other questions (e.g., in a question with four answer choices, the ordering of the first two answer choices can be randomized, while the third and fourth answer choices will always appear, respectively, as the third and fourth options).
+* [Alternative implementations](https://gist.github.com/marketinview/2a7172dd9c599f83ca45) using JavaScript are also available.
 
 For further recommendations, consult [Randomized Variables](#randomized-variables).
 
@@ -105,7 +105,7 @@ Images to be used in conjunction with, or in lieu of, question text should first
      
 	Each coauthor should test the survey in its entirety using either the Preview Survey functionality or the Anonymous Link for web distribution. Both approaches record survey responses.
    
-	If research assistants are collaborating on the project, they should be allowed full access to the survey in order to review the survey instrument and flow. The primary researcher(s) may choose to copy the survey prior to sharing to research assistants, to avoid accidental changes or errors. [[I wonder if we should change this to just say--someone who didn't create the survey should go through taking the survey and looking at the survey flow element by element to make sure it makes sense, whether another co-author or an RA.]] [[I think we should recommend that a less-direct collaborator also examine the survey; we know that coauthors can still mess up.]]
+	If research assistants are collaborating on the project, they should be allowed full access to the survey in order to review the survey instrument and flow. The primary researcher(s) may choose to copy the survey prior to sharing to research assistants, to avoid accidental changes or errors. Alternatively, if a research assistant is unavailable, the primary researchers should seek the assistance of external collaborators who were neither involved in creating the survey instrument, nor directly involved in the broader research project; this approach aims to minimize the potential for bias preventing the discovery of design flaws.
 
 	Test Responses (Tools &rarr; Test Survey) allow for computer-generated responses to all survey questions; depending on the complexity of survey flow and number of treatment arms, researchers may wish to collect twice as many test responses as intended human survey responses (using Test Responses, approximately half will fail the consent question).  
         
@@ -440,37 +440,38 @@ Prior to further analysis, the correctness answer-choice codings represented in 
 
 * It is of critical importance that the researcher perform this step diligently when comparing across surveys, or performing replication studies.
 
-#### Clean variables
+### Clean variables
 <!--
 Include text regarding coding/recoding, making indicators, coalescing, imputation.
 -->
 Despite careful design in both Qualtrics and MTurk, the researcher may find that additional data-cleaning is a necessity. Whenever possible, it is recommended that the researcher perform this cleaning within Qualtrics (see [Randomization](#randomization) for information on recoding variables following data collection). However, the researcher may also wish to recode variables "by hand," in `R`; or, to clean variables by imputing missing values.
 
-* When variables must be recoded in R, it is recommended that the researcher use [[decide whether we want the researcher to use `dplyr::recode` here; my view is that we should recommend all base-`R` implementations]]
+#### Imputation
 
-* For the purposes of imputation, it is recommended that the researcher follow the Standard Operating Procedures for the Green Lab at Columbia University (@lin2015standard), with one minor refinement (mode imputation):
-	* In cases in which more than 20% of responses are missing, the researcher should create an indicator variable denoting missingness in the given variable.
-	* In all other cases, mean or mode imputation should be employed; it is recommended that the researcher use mean imputation for all ordinal or binary variables, whereas mode imputation is recommended for categorical/nominal variables.
+For the purposes of imputation, it is recommended that the researcher follow the Standard Operating Procedures for the Green Lab at Columbia University (@lin2015standard), with one minor refinement (mode imputation):
+	
+* In cases in which more than 20% of responses are missing, the researcher should create an indicator variable denoting missingness in the given variable.
+* In all other cases, mean or mode imputation should be employed; it is recommended that the researcher use mean imputation for all ordinal or binary variables, whereas mode imputation is recommended for categorical/nominal variables.
 	The below `impute()` function will assess missingness in variables, and will perform imputation automatically, where appropriate (note that `impute()` performs mean imputation by default; the function will perform mode imputation if the researcher sets the `ord` argument to `FALSE`):
 	
-	    ```r
-	    impute <- function(x, ord = TRUE) {
-              if (ord) {
-                if (sum(is.na(x)) <= 20) {
-                  x[is.na(x)] <- mean(x, na.rm = TRUE)
-                } else {
-                  x[is.na(x)] <- -99
-                }
-              } else {
-                if (sum(is.na(x)) <= 20) {
-                  x[is.na(x)] <- num_mode(x)
-                } else {
-                  x[is.na(x)] <- -99
-                }
-              }
-              return(x)
-            }
-	    ```
+    ```r
+    impute <- function(x, ord = TRUE) {
+      if (ord) {
+        if (sum(is.na(x)) <= 20) {
+          x[is.na(x)] <- mean(x, na.rm = TRUE)
+        } else {
+          x[is.na(x)] <- -99
+        }
+      } else {
+        if (sum(is.na(x)) <= 20) {
+          x[is.na(x)] <- num_mode(x)
+        } else {
+          x[is.na(x)] <- -99
+        }
+      }
+      return(x)
+    }
+    ```
 
 #### Recoding variables
 
