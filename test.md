@@ -673,8 +673,8 @@ editing-the-survey-link-project-template-in-the-ui.html --><!-- Bootstrap v3.0.3
 
 
 					<p style="font-family:"><span style="font-size: 11pt;">If you have any questions about this
-					study, you may contact the investigators, &lt;primary pesearcher(s) name(s) here&gt;, at
-					&lt;primary researcher(s) email address(es) here&gt;.</span>
+					study, you may contact the investigators, &lt;primary researcher name(s) here&gt;, at
+					&lt;primary researcher email address(es) here&gt;.</span>
 					</p>
 
 
