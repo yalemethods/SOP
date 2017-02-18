@@ -4,7 +4,8 @@ CHAPTER_MD = $(addprefix md-,$(CHAPTERS))
 CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
 CHAPTER_PDF = $(addprefix pdf-,$(CHAPTERS))
 
-.PHONY : clean all md html pdf $(CHAPTER_MD) $(CHAPTER_HTML) $(CHAPTER_PDF)
+.PHONY : clean all md html pdf $(CHAPTER_ALL) $(CHAPTER_MD) $(CHAPTER_HTML) $(CHAPTER_PDF)
+
 
 # Make all
 
