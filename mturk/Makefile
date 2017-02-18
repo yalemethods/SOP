@@ -1,9 +1,11 @@
-.PHONY : clean source assets bibliography
+.PHONY: clean source assets bibliography
 
-clean :
+CHAPTER = mturk
 
-source :
+clean:
 
-assets :
+source: $(CHAPTER).md
 
-bibliography :
+assets: $(CHAPTER)
+
+bibliography: $(CHAPTER).bib

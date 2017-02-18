@@ -1,11 +1,15 @@
-.PHONY : clean source assets bibliography
+.PHONY: clean source assets bibliography
 
-clean :
-	rm -f example-latex.md
+CHAPTER = example-latex
 
-source : example-latex.tex
-	pandoc example-latex.tex -o example-latex.md
+clean:
+	rm -f $(CHAPTER).md
 
-assets :
+source: $(CHAPTER).md
 
-bibliography :
+assets: $(CHAPTER)
+
+bibliography: $(CHAPTER).bib
+
+$(CHAPTER).md: $(CHAPTER).tex
+	pandoc $(CHAPTER).tex -o $(CHAPTER).md
