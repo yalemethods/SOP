@@ -1,94 +1,140 @@
 CHAPTERS = $(shell cat chapters.txt)
 CHAPTER_ALL = $(addprefix all-,$(CHAPTERS))
-CHAPTER_MD = $(addprefix md-,$(CHAPTERS))
-CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
 CHAPTER_PDF = $(addprefix pdf-,$(CHAPTERS))
+CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
+CHAPTER_TEXFRAG = $(addprefix texfrag-,$(CHAPTERS))
+CHAPTER_MD = $(addprefix md-,$(CHAPTERS))
 
-.PHONY : clean all md html pdf $(CHAPTER_ALL) $(CHAPTER_MD) $(CHAPTER_HTML) $(CHAPTER_PDF)
-
-
-# Make all
-
-all : md html pdf
-
-$(CHAPTER_ALL) : all-% : md-% html-% pdf-%
-
-
-# Make Markdown
-
-md : $(CHAPTER_MD)
-
-$(CHAPTER_MD) : md-% : bin/md/% bin/md/%.md bin/md/%.bib
-
-bin/md/% : % bin/md
-	cd $< && $(MAKE) assets
-	cp -R $(<)/$(<) $@
-
-bin/md/%.md : % bin/md
-	cd $< && $(MAKE) source
-	pandoc $(<)/$(<).md -o $@
-
-bin/md/%.bib : % bin/md
-	cd $< && $(MAKE) bibliography
-	cp -R $(<)/$(<).bib $@
-
-bin/md :
-	mkdir -p bin/md
+.PHONY: all \
+        clean \
+        pdf \
+        pdfsoc \
+        pdfchapters \
+        html \
+        texfrag \
+        md \
+        $(CHAPTER_ALL) \
+        $(CHAPTER_PDF) \
+        $(CHAPTER_HTML) \
+        $(CHAPTER_TEXFRAG) \
+        $(CHAPTER_MD)
 
 
-# Make html
+# Main targets
 
-html : $(CHAPTER_HTML)
+all: html pdf
 
-$(CHAPTER_HTML) : html-% : bin/html/% bin/html/%.html
+clean:
+	rm -rf bin
 
-bin/html/% : bin/md/% bin/html
-	cp -R $< $@
+pdf: pdfsoc pdfchapters
 
-bin/html/%.html : bin/html bin/md/%.md bin/md/%.bib
+pdfsoc: bin/pdf-soc/soc.pdf
+
+pdfchapters: $(CHAPTER_PDF)
+
+html: $(CHAPTER_HTML)
+
+texfrag: $(CHAPTER_TEXFRAG)
+
+md: $(CHAPTER_MD)
+
+
+# Chapter targets
+
+$(CHAPTER_ALL): all-% : html-% pdf-%
+
+$(CHAPTER_PDF): pdf-% : bin/pdf-chapters/%.pdf
+
+$(CHAPTER_HTML): html-% : bin/html/% bin/html/%.html
+
+$(CHAPTER_TEXFRAG): texfrag-% : bin/tex/% bin/tex/%-frag.tex bin/tex/%.bib
+
+$(CHAPTER_MD): md-% : bin/md/% bin/md/%.md bin/md/%.bib
+
+
+# PDF main target
+
+bin/pdf-soc/soc.pdf: bin/tex/soc.tex $(CHAPTER_TEXFRAG)
+	cd bin/tex && pdflatex soc && pdflatex soc
+	mkdir -p bin/pdf-soc
+	cp -R bin/tex/soc.pdf bin/pdf-soc/soc.pdf
+
+
+# PDF chapters targets
+
+bin/pdf-chapters/%.pdf: bin/tex/% bin/tex/%-chap.tex bin/tex/%-frag.tex bin/tex/%.bib
+	if [ -s bin/tex/$(*F).bib ]; then \
+		cd bin/tex && pdflatex $(*F)-chap && bibtex $(*F)-chap; \
+	fi
+	cd bin/tex && pdflatex $(*F)-chap && pdflatex $(*F)-chap
+	mkdir -p bin/pdf-chapters
+	cp -R bin/tex/$(*F)-chap.pdf $@
+
+
+# HTML targets
+
+bin/html/%.html: bin/md/%.md bin/md/%.bib
+	mkdir -p bin/html
 	pandoc -s --mathjax --filter pandoc-citeproc --bibliography bin/md/$(*F).bib bin/md/$(*F).md -o $@
 
-bin/html :
+bin/html/%: bin/md/%
 	mkdir -p bin/html
-
-
-# Make pdf
-
-pdf : $(CHAPTER_PDF)
-
-$(CHAPTER_PDF) : pdf-% : bin/pdf/%.pdf bin/tex/% bin/tex/%.tex bin/tex/%.bib
-
-bin/pdf/%.pdf : bin/pdf bin/tex/% bin/tex/%.tex bin/tex/%.bib
-	if [ -s bin/tex/$(*F).bib ]; then \
-		cd bin/tex && pdflatex $(*F) && bibtex $(*F); \
-	fi
-	cd bin/tex && pdflatex $(*F) && pdflatex $(*F)
-	cp -R bin/tex/$(*F).pdf $@
-
-bin/tex/% : bin/md/% bin/tex
 	cp -R $< $@
 
-bin/tex/%.tex : bin/tex/%.md bin/tex/%.bib
-	if [ -s bin/tex/$(*F).bib ]; then \
-		cd bin/tex && pandoc -s --listings --natbib --filter pandoc-citeproc --bibliography $(*F).bib $(*F).md -o $(*F).tex; \
-	else \
-		cd bin/tex && pandoc -s --listings $(*F).md -o $(*F).tex; \
-	fi
 
-bin/tex/%.md : bin/md/%.md bin/tex
-	cp -R $< $@
+# TeX targets
 
-bin/tex/%.bib : bin/md/%.bib bin/tex
-	cp -R $< $@
-
-bin/pdf :
-	mkdir -p bin/pdf
-
-bin/tex :
+bin/tex/soc.tex: chapters.txt templates/pdf/common-header.tex templates/pdf/soc-header.tex templates/pdf/common-footer.tex
 	mkdir -p bin/tex
+	cat templates/pdf/common-header.tex > bin/tex/soc.tex
+	cat templates/pdf/soc-header.tex >> bin/tex/soc.tex
+	for ch in $(CHAPTERS); do \
+		echo "\\\\chapter{$$ch}\n\n\\\\include{$$ch-frag}\n\n" >> bin/tex/soc.tex; \
+	done
+	cat templates/pdf/common-footer.tex >> bin/tex/soc.tex
+
+bin/tex/%-chap.tex: templates/pdf/common-header.tex templates/pdf/soc-header.tex templates/pdf/common-footer.tex
+	mkdir -p bin/tex
+	cat templates/pdf/common-header.tex > $@
+	cat templates/pdf/chapter-header.tex >> $@
+	echo "\\\\chapter{$(*F)}\n\n\\\\include{$(*F)-frag}\n\n" >> $@
+	echo "\\\\bibliography{$(*F).bib}\n\n" >> $@
+	cat templates/pdf/common-footer.tex >> $@
+
+bin/tex/%-frag.tex: bin/tex/%.md bin/tex/%.bib
+	if [ -s bin/tex/$(*F).bib ]; then \
+		cd bin/tex && pandoc --listings --natbib --filter pandoc-citeproc --bibliography $(*F).bib $(*F).md -o $(*F)-frag.tex; \
+	else \
+		cd bin/tex && pandoc --listings $(*F).md -o $(*F)-frag.tex; \
+	fi
+
+bin/tex/%.md: bin/md/%.md
+	mkdir -p bin/tex
+	cp -R $< $@
+
+bin/tex/%: bin/md/%
+	mkdir -p bin/tex
+	cp -R $< $@
+
+bin/tex/%.bib: bin/md/%.bib
+	mkdir -p bin/tex
+	cp -R $< $@
 
 
-# Clean
+# Markdown targets
 
-clean :
-	rm -rf bin
+bin/md/%.md: %
+	cd $< && $(MAKE) source
+	mkdir -p bin/md
+	pandoc $(<)/$(<).md -o $@
+
+bin/md/%: %
+	cd $< && $(MAKE) assets
+	mkdir -p bin/md
+	cp -R $(<)/$(<) $@
+
+bin/md/%.bib: %
+	cd $< && $(MAKE) bibliography
+	mkdir -p bin/md
+	cp -R $(<)/$(<).bib $@
