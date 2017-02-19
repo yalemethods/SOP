@@ -1,24 +1,22 @@
 \documentclass[
-a4paper, % Stock and paper size.
-11pt, % Type size.
-% article,
-% oneside,
-onecolumn, % Only one column of text on a page.
-% openright, % Each chapter will start on a recto page.
-% openleft, % Each chapter will start on a verso page.
-openany, % A chapter may start on either a recto or verso page.
+letterpaper,
+11pt,
+oneside,
+onecolumn,
+openany,
 ]{memoir}
 
-%%% PACKAGES
-%%%------------------------------------------------------------------------------
+\renewcommand{\rmdefault}{ppl} % rm
+\linespread{1.1}
+\usepackage[scaled]{helvet}
+\usepackage{courier}
+\usepackage[euler-digits,euler-hat-accent]{eulervm}
+\normalfont
 
-\usepackage{lmodern}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage[final]{microtype}
-
-% \usepackage{kpfonts}
 
 \usepackage{amsmath,amssymb,mathtools}
 
@@ -33,7 +31,7 @@ openany, % A chapter may start on either a recto or verso page.
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 
 \usepackage{natbib}
-\bibliographystyle{plainnat}
+\usepackage[sectionbib]{chapterbib}
 \usepackage{listings}
 \usepackage{longtable,booktabs}
 \usepackage{footnote}
@@ -55,26 +53,7 @@ openany, % A chapter may start on either a recto or verso page.
 \maxsecnumdepth{subsection} % Subsections (and higher) are numbered
 \setsecnumdepth{subsection}
 
-\makeatletter %
-\makechapterstyle{standard}{
-	\setlength{\beforechapskip}{0\baselineskip}
-	\setlength{\midchapskip}{1\baselineskip}
-	\setlength{\afterchapskip}{8\baselineskip}
-	\renewcommand{\chapterheadstart}{\vspace*{\beforechapskip}}
-	\renewcommand{\chapnamefont}{\centering\normalfont\Large}
-	\renewcommand{\printchaptername}{\chapnamefont \@chapapp}
-	\renewcommand{\chapternamenum}{\space}
-	\renewcommand{\chapnumfont}{\normalfont\Large}
-	\renewcommand{\printchapternum}{\chapnumfont \thechapter}
-	\renewcommand{\afterchapternum}{\par\nobreak\vskip \midchapskip}
-	\renewcommand{\printchapternonum}{\vspace*{\midchapskip}\vspace*{5mm}}
-	\renewcommand{\chaptitlefont}{\centering\bfseries\LARGE}
-	\renewcommand{\printchaptertitle}[1]{\chaptitlefont ##1}
-	\renewcommand{\afterchaptertitle}{\par\nobreak\vskip \afterchapskip}
-}
-\makeatother
-
-\chapterstyle{standard}
+\chapterstyle{dash}
 
 \setsecheadstyle{\normalfont\large\bfseries}
 \setsubsecheadstyle{\normalfont\normalsize\bfseries}
@@ -143,11 +122,6 @@ openany, % A chapter may start on either a recto or verso page.
 \pagestyle{standard}               % Choosing pagestyle and chapter pagestyle
 \aliaspagestyle{chapter}{chap} %
 
-%%% NEW COMMANDS
-%%%------------------------------------------------------------------------------
-
-%\newcommand{\p}{\partial}
-
 %%% TABLE OF CONTENTS
 %%%------------------------------------------------------------------------------
 
@@ -167,3 +141,10 @@ breaklinks=true
 }
 \urlstyle{same}
 \usepackage{memhfixc}   %
+
+\author{Yale Methods Group}
+\title{Standard Operating Procedures}
+
+\begin{document}
+	
+	\renewcommand{\bibname}{References}

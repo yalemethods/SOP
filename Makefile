@@ -27,9 +27,7 @@ all: html pdf
 clean:
 	rm -rf bin
 
-pdf: pdfsoc pdfchapters
-
-pdfsoc: bin/pdf-soc/soc.pdf
+pdf: bin/soc.pdf
 
 pdfchapters: $(CHAPTER_PDF)
 
@@ -55,10 +53,15 @@ $(CHAPTER_MD): md-% : bin/md/% bin/md/%.md bin/md/%.bib
 
 # PDF main target
 
-bin/pdf-soc/soc.pdf: bin/tex/soc.tex bin/tex/preamble.tex $(CHAPTER_TEXFRAG)
+bin/soc.pdf: bin/tex/soc.tex bin/tex/preamble.tex $(CHAPTER_TEXFRAG)
+	cd bin/tex && pdflatex soc
+	cd bin/tex && for ch in $(CHAPTERS); do \
+		if [ -s $${ch}.bib ]; then \
+			bibtex $${ch}-frag.aux; \
+		fi \
+	done
 	cd bin/tex && pdflatex soc && pdflatex soc
-	mkdir -p bin/pdf-soc
-	cp -R bin/tex/soc.pdf bin/pdf-soc/soc.pdf
+	cp -R bin/tex/soc.pdf bin/soc.pdf
 
 
 # PDF chapters targets
@@ -94,7 +97,7 @@ bin/tex/soc.tex: chapters.txt templates/pdf/soc-header.tex templates/pdf/footer.
 	echo "\\\\input{preamble.tex}\n\n" > bin/tex/soc.tex
 	cat templates/pdf/soc-header.tex >> bin/tex/soc.tex
 	for ch in $(CHAPTERS); do \
-		echo "\\\\chapter{$$ch}\n\n\\\\include{$$ch-frag}\n\n" >> bin/tex/soc.tex; \
+		echo "\\\\include{$$ch-frag}\n\n" >> bin/tex/soc.tex; \
 	done
 	cat templates/pdf/footer.tex >> bin/tex/soc.tex
 
@@ -102,15 +105,20 @@ bin/tex/%-chap.tex: templates/pdf/chapter-header.tex templates/pdf/footer.tex
 	mkdir -p bin/tex
 	echo "\\\\input{preamble.tex}\n\n" > $@
 	cat templates/pdf/chapter-header.tex >> $@
-	echo "\\\\chapter{$(*F)}\n\n\\\\include{$(*F)-frag}\n\n" >> $@
-	echo "\\\\bibliography{$(*F).bib}\n\n" >> $@
+	echo "\\\\include{$(*F)-frag}\n\n" >> $@
 	cat templates/pdf/footer.tex >> $@
 
 bin/tex/%-frag.tex: bin/tex/%.md bin/tex/%.bib
 	if [ -s bin/tex/$(*F).bib ]; then \
-		cd bin/tex && pandoc --listings --natbib --filter pandoc-citeproc --bibliography $(*F).bib $(*F).md -o $(*F)-frag.tex; \
+		cd bin/tex && pandoc --listings --natbib --filter pandoc-citeproc --bibliography $(*F).bib $(*F).md -o tmp-$(*F)-frag.tex; \
 	else \
-		cd bin/tex && pandoc --listings $(*F).md -o $(*F)-frag.tex; \
+		cd bin/tex && pandoc --listings $(*F).md -o tmp-$(*F)-frag.tex; \
+	fi
+	echo "\\\\chapter{$(*F)}\n\n" > bin/tex/$(*F)-frag.tex
+	cat bin/tex/tmp-$(*F)-frag.tex >> bin/tex/$(*F)-frag.tex
+	rm bin/tex/tmp-$(*F)-frag.tex
+	if [ -s bin/tex/$(*F).bib ]; then \
+		echo "\n\n\\\\bibliographystyle{plainnat}\n\\\\bibliography{$(*F)}\n" >> bin/tex/$(*F)-frag.tex; \
 	fi
 
 bin/tex/%.md: bin/md/%.md
