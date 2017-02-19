@@ -55,7 +55,7 @@ $(CHAPTER_MD): md-% : bin/md/% bin/md/%.md bin/md/%.bib
 
 # PDF main target
 
-bin/pdf-soc/soc.pdf: bin/tex/soc.tex $(CHAPTER_TEXFRAG)
+bin/pdf-soc/soc.pdf: bin/tex/soc.tex bin/tex/preamble.tex $(CHAPTER_TEXFRAG)
 	cd bin/tex && pdflatex soc && pdflatex soc
 	mkdir -p bin/pdf-soc
 	cp -R bin/tex/soc.pdf bin/pdf-soc/soc.pdf
@@ -63,7 +63,7 @@ bin/pdf-soc/soc.pdf: bin/tex/soc.tex $(CHAPTER_TEXFRAG)
 
 # PDF chapters targets
 
-bin/pdf-chapters/%.pdf: bin/tex/% bin/tex/%-chap.tex bin/tex/%-frag.tex bin/tex/%.bib
+bin/pdf-chapters/%.pdf: bin/tex/preamble.tex bin/tex/% bin/tex/%-chap.tex bin/tex/%-frag.tex bin/tex/%.bib
 	if [ -s bin/tex/$(*F).bib ]; then \
 		cd bin/tex && pdflatex $(*F)-chap && bibtex $(*F)-chap; \
 	fi
@@ -85,22 +85,26 @@ bin/html/%: bin/md/%
 
 # TeX targets
 
-bin/tex/soc.tex: chapters.txt templates/pdf/common-header.tex templates/pdf/soc-header.tex templates/pdf/common-footer.tex
+bin/tex/preamble.tex: templates/pdf/preamble.tex
 	mkdir -p bin/tex
-	cat templates/pdf/common-header.tex > bin/tex/soc.tex
+	cp $< $@
+
+bin/tex/soc.tex: chapters.txt templates/pdf/soc-header.tex templates/pdf/footer.tex
+	mkdir -p bin/tex
+	echo "\\\\input{preamble.tex}\n\n" > bin/tex/soc.tex
 	cat templates/pdf/soc-header.tex >> bin/tex/soc.tex
 	for ch in $(CHAPTERS); do \
 		echo "\\\\chapter{$$ch}\n\n\\\\include{$$ch-frag}\n\n" >> bin/tex/soc.tex; \
 	done
-	cat templates/pdf/common-footer.tex >> bin/tex/soc.tex
+	cat templates/pdf/footer.tex >> bin/tex/soc.tex
 
-bin/tex/%-chap.tex: templates/pdf/common-header.tex templates/pdf/soc-header.tex templates/pdf/common-footer.tex
+bin/tex/%-chap.tex: templates/pdf/chapter-header.tex templates/pdf/footer.tex
 	mkdir -p bin/tex
-	cat templates/pdf/common-header.tex > $@
+	echo "\\\\input{preamble.tex}\n\n" > $@
 	cat templates/pdf/chapter-header.tex >> $@
 	echo "\\\\chapter{$(*F)}\n\n\\\\include{$(*F)-frag}\n\n" >> $@
 	echo "\\\\bibliography{$(*F).bib}\n\n" >> $@
-	cat templates/pdf/common-footer.tex >> $@
+	cat templates/pdf/footer.tex >> $@
 
 bin/tex/%-frag.tex: bin/tex/%.md bin/tex/%.bib
 	if [ -s bin/tex/$(*F).bib ]; then \
