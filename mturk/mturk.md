@@ -57,7 +57,7 @@ The survey, hosted via a Secure Qualtrics platform, should satisfy the following
      Respondents who complete the survey should then receive an End-of-survey messages such that the confirmation code is piped into the message. Ensure that the Embedded Data term "called" in the Web Service element matches that defined in the message written and stored in the Qualtrics Library (see above image). 
      ![End of Survey Example](mturk/eos.jpg)
 
-     * Anonymization. Survey responses must be anonymized in accordance with IRB exemption/approval. Responses can be anonymized by checking the appropriate box in Survey Options &rarr; Survey Protection, as below.
+     * Anonymization. Survey responses must be anonymized in accordance with IRB exemption/approval. Responses can be anonymized by checking the appropriate box in Survey Options > Survey Protection, as below.
     ![Anonymization Example](mturk/anonymize.jpg)
     
      * Follow-up surveys. Follow-up surveys should always include either or both of the following elements, in confirmed working order: 
@@ -66,7 +66,7 @@ The survey, hosted via a Secure Qualtrics platform, should satisfy the following
       
      * Validation. Each survey question should feature appropriate validation using Validation Options (e.g., Request Response, or Custom Validation for various input formats). Validation options can be selected on the right pane containing question options, after selecting a given question in the Qualtrics platform. 
      
-     * Images. Images to be used in conjunction with, or in lieu of, question text should first be added to the Qualtrics Graphics Library, accessible by clicking Library &rarr; Graphics Library. (Images can be uploaded to the Graphics Library by clicking the Upload Graphic button). Once uploaded to the Graphics Library, images can be embedded in questions by opening the Rich Content Editor, and clicking the Insert Graphic button, as shown below. 
+     * Images. Images to be used in conjunction with, or in lieu of, question text should first be added to the Qualtrics Graphics Library, accessible by clicking Library > Graphics Library. (Images can be uploaded to the Graphics Library by clicking the Upload Graphic button). Once uploaded to the Graphics Library, images can be embedded in questions by opening the Rich Content Editor, and clicking the Insert Graphic button, as shown below. 
 		![Insert Graphic Example](mturk/insert_graphic.jpg)
 
 * **Survey testing**
@@ -76,7 +76,7 @@ The survey, hosted via a Secure Qualtrics platform, should satisfy the following
    
         If research assistants are collaborating on the project, they should be allowed full access to the survey in order to review the survey instrument and flow. The primary researcher(s) may choose to copy the survey prior to sharing to research assistants, to avoid accidental changes or errors. [[I wonder if we should change this to just say--someone who didn't create the survey should go through taking the survey and looking at the survey flow element by element to make sure it makes sense, whether another co-author or an RA.]
 
-        Test Responses (Tools &rarr; Test Survey) allow for computer-generated responses to all survey questions; depending on the complexity of survey flow and number of treatment arms, researchers may wish to collect twice as many test responses as intended human survey responses (using Test Responses, approximately half will fail the consent question).  
+        Test Responses (Tools > Test Survey) allow for computer-generated responses to all survey questions; depending on the complexity of survey flow and number of treatment arms, researchers may wish to collect twice as many test responses as intended human survey responses (using Test Responses, approximately half will fail the consent question).  
         
         Examine potential issues and data structure by downloading data via Data & Analysis (using legacy format). Ensure that survey flow is functioning properly, and all data necessary for analysis will be collected. 
 
@@ -217,7 +217,7 @@ The survey, hosted via a Secure Qualtrics platform, should satisfy the following
                 * Where appropriate, if using funds from an external source (e.g., from a faculty research account), confirm the status of the HIT and Qualtrics survey prior to the transfer of relevant funds
                     * Funds should match the quoted Balance Due exactly
             5. Once all aspects of the HIT are confirmed, select "Purchase & Publish"; the HIT's progress may now be monitored by navigating to the "Manage" tab at the navigation bar at the top of the MTurk Requester page
-        5. Confirm the validity of the pilot study using Qualtrics and MTurk data (the latter of which can be accessed via Manage &rarr; Results) and potential MTurker feedback, and correct any remaining errors
+        5. Confirm the validity of the pilot study using Qualtrics and MTurk data (the latter of which can be accessed via Manage > Results) and potential MTurker feedback, and correct any remaining errors
         
     2. Full distribution -- once the pilot study has been completed and accuracy of all design elements and data are confirmed, the study may be distributed to the entire subject pool
         1. Given a flawless pilot study, launch the HIT following the relevant instructions in the section on piloting above, on *n* - *k* subjects, where *n* refers to the total number of subjects targeted for the study, and *k* refers to the number of subjects included in the pilot
