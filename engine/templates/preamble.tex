@@ -9,7 +9,6 @@ openany,
 \renewcommand{\rmdefault}{ppl} % rm
 \linespread{1.1}
 \usepackage[scaled]{helvet}
-\usepackage{courier}
 \usepackage[euler-digits,euler-hat-accent]{eulervm}
 \normalfont
 
@@ -32,7 +31,30 @@ openany,
 
 \usepackage{natbib}
 \usepackage[sectionbib]{chapterbib}
+\usepackage{xcolor}
 \usepackage{listings}
+
+\lstset{%
+  backgroundcolor=\color[RGB]{248,248,248},
+  basicstyle=\small\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color[rgb]{0.56,0.35,0.01}\itshape,
+  %escapeinside={\%*}{*)},
+  keywordstyle=\color[rgb]{0.13,0.29,0.53}\bfseries,
+  stringstyle=\color[rgb]{0.31,0.60,0.02},
+  numbers=none,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  keepspaces=true,
+  breakautoindent=true,
+  %linewidth=\textwidth,
+  basewidth=0.5em,
+}
+
 \usepackage{longtable,booktabs}
 \usepackage{footnote}
 \makesavenoteenv{long table}
@@ -57,10 +79,10 @@ openany,
 
 \makeatletter
 \newcommand{\chapterauthor}[1]{%
-	{\centering\parindent0pt\vspace*{-25pt}%
-		\linespread{1.8}\large\itshape#1%
-		\par\nobreak\vspace*{35pt}}
-	\@afterheading%
+  {\centering\parindent0pt\vspace*{-25pt}%
+    \linespread{1.8}\large\itshape#1%
+    \par\nobreak\vspace*{35pt}}
+  \@afterheading%
 }
 \makeatother
 
@@ -106,14 +128,14 @@ openany,
 
 \makeatletter
 \makepsmarks{standard}{
-	\createmark{chapter}{both}{shownumber}{\@chapapp\ }{ \quad }
-	\createmark{section}{right}{shownumber}{}{ \quad }
-	\createplainmark{toc}{both}{\contentsname}
-	\createplainmark{lof}{both}{\listfigurename}
-	\createplainmark{lot}{both}{\listtablename}
-	\createplainmark{bib}{both}{\bibname}
-	\createplainmark{index}{both}{\indexname}
-	\createplainmark{glossary}{both}{\glossaryname}
+  \createmark{chapter}{both}{shownumber}{\@chapapp\ }{ \quad }
+  \createmark{section}{right}{shownumber}{}{ \quad }
+  \createplainmark{toc}{both}{\contentsname}
+  \createplainmark{lof}{both}{\listfigurename}
+  \createplainmark{lot}{both}{\listtablename}
+  \createplainmark{bib}{both}{\bibname}
+  \createplainmark{index}{both}{\indexname}
+  \createplainmark{glossary}{both}{\glossaryname}
 }
 \makeatother                               %
 
@@ -144,9 +166,9 @@ openany,
 
 \usepackage[unicode=true]{hyperref}   % Internal hyperlinks
 \hypersetup{
-	pdfborder={0 0 0},      % No borders around internal hyperlinks
-	pdfauthor={I am the Author}, % author
-	breaklinks=true
+  pdfborder={0 0 0},      % No borders around internal hyperlinks
+  pdfauthor={I am the Author}, % author
+  breaklinks=true
 }
 \urlstyle{same}
 \usepackage{memhfixc}   %
