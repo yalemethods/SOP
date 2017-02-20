@@ -1,11 +1,9 @@
-.PHONY: clean source assets bibliography
+.PHONY: clean assets
 
 CHAPTER = example-md
 
 clean:
 
-source: $(CHAPTER).md
+assets:
 
-assets: $(CHAPTER)
-
-bibliography: $(CHAPTER).bib
+$(CHAPTER).md:

@@ -1,7 +1,10 @@
 ---
 title: Qualtrics Survey Platform with Recruitment via MTurk
-author: Jonathon Baron & Molly Offer-Westort
+author:
+  - Jonathon Baron
+  - Molly Offer-Westort
 date: 2017-1-18
+bibliography: mturk.bib
 ---
 
 This document provides recommendations for researchers conducting studies using the Qualtrics survey platform, with recruitment via Amazon Mechanical Turk (MTurk). These recommendations should serve as default practices, and cover pre-planning, design checks in both the Qualtrics and MTurk platforms, several stages of testing, and protocols for resolving issues after launching a flawed study.

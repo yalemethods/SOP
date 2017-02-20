@@ -1,44 +1,40 @@
-CHAPTERS = $(shell cat chapters.txt)
+CHAPTERS = $(shell ls -d */ | cut -f1 -d'/')
 CHAPTER_ALL = $(addprefix all-,$(CHAPTERS))
 CHAPTER_PDF = $(addprefix pdf-,$(CHAPTERS))
 CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
 CHAPTER_TEXFRAG = $(addprefix texfrag-,$(CHAPTERS))
 CHAPTER_MD = $(addprefix md-,$(CHAPTERS))
 
-.PHONY: all \
-        clean \
-        pdf \
-        pdfsoc \
-        pdfchapters \
-        html \
-        texfrag \
-        md \
-        $(CHAPTER_ALL) \
-        $(CHAPTER_PDF) \
-        $(CHAPTER_HTML) \
-        $(CHAPTER_TEXFRAG) \
-        $(CHAPTER_MD)
+.PHONY: all clean pdf pdfchapters html texfrag md \
+        $(CHAPTER_ALL) $(CHAPTER_PDF) $(CHAPTER_HTML) \
+        $(CHAPTER_TEXFRAG) $(CHAPTER_MD)
 
 
-# Main targets
+### Main targets
 
 all: html pdf
 
 clean:
 	rm -rf bin
 
-pdf: bin/soc.pdf
+# Active chapters
+.active: sop.yaml
+	echo "ACTIVE_CHAPTERS = $$(python engine/scripts/active_chapters.py sop.yaml)" > .active
 
-pdfchapters: $(CHAPTER_PDF)
+include .active
 
-html: $(CHAPTER_HTML)
+pdf: bin/sop.pdf
 
-texfrag: $(CHAPTER_TEXFRAG)
+pdfchapters: $(addprefix pdf-,$(ACTIVE_CHAPTERS))
 
-md: $(CHAPTER_MD)
+html: $(addprefix html-,$(ACTIVE_CHAPTERS))
+
+texfrag: $(addprefix texfrag-,$(ACTIVE_CHAPTERS))
+
+md: $(addprefix md-,$(ACTIVE_CHAPTERS))
 
 
-# Chapter targets
+### Chapter targets
 
 $(CHAPTER_ALL): all-% : html-% pdf-%
 
@@ -46,36 +42,40 @@ $(CHAPTER_PDF): pdf-% : bin/pdf-chapters/%.pdf
 
 $(CHAPTER_HTML): html-% : bin/html/% bin/html/%.html
 
-$(CHAPTER_TEXFRAG): texfrag-% : bin/tex/% bin/tex/%-frag.tex bin/tex/%.bib
+$(CHAPTER_TEXFRAG): texfrag-% : bin/tex/% bin/tex/%-frag.tex bin/tex/%-body.tex bin/tex/%.bib
 
 $(CHAPTER_MD): md-% : bin/md/% bin/md/%.md bin/md/%.bib
 
 
-# PDF main target
+### PDF main target
 
-bin/soc.pdf: bin/tex/soc.tex bin/tex/preamble.tex $(CHAPTER_TEXFRAG)
-	cd bin/tex && pdflatex soc
-	cd bin/tex && for ch in $(CHAPTERS); do \
+bin/sop.pdf: bin/tex/sop.tex bin/tex/preamble.tex texfrag
+	cd bin/tex && \
+	pdflatex sop && \
+	for ch in $(ACTIVE_CHAPTERS); do \
 		if [ -s $${ch}.bib ]; then \
 			bibtex $${ch}-frag.aux; \
 		fi \
-	done
-	cd bin/tex && pdflatex soc && pdflatex soc
-	cp -R bin/tex/soc.pdf bin/soc.pdf
+	done && \
+	pdflatex sop && \
+	pdflatex sop
+	cp bin/tex/sop.pdf bin/sop.pdf
 
 
-# PDF chapters targets
+### PDF chapters targets
 
-bin/pdf-chapters/%.pdf: bin/tex/preamble.tex bin/tex/% bin/tex/%-chap.tex bin/tex/%-frag.tex bin/tex/%.bib
+bin/pdf-chapters/%.pdf: bin/tex/preamble.tex bin/tex/% bin/tex/%-chap.tex bin/tex/%-frag.tex bin/tex/%-body.tex bin/tex/%.bib
+	cd bin/tex && \
 	if [ -s bin/tex/$(*F).bib ]; then \
 		cd bin/tex && pdflatex $(*F)-chap && bibtex $(*F)-chap; \
-	fi
-	cd bin/tex && pdflatex $(*F)-chap && pdflatex $(*F)-chap
+	fi && \
+	pdflatex $(*F)-chap && \
+	pdflatex $(*F)-chap
 	mkdir -p bin/pdf-chapters
-	cp -R bin/tex/$(*F)-chap.pdf $@
+	cp bin/tex/$(*F)-chap.pdf $@
 
 
-# HTML targets
+### HTML targets
 
 bin/html/%.html: bin/md/%.md bin/md/%.bib
 	mkdir -p bin/html
@@ -86,44 +86,30 @@ bin/html/%: bin/md/%
 	cp -R $< $@
 
 
-# TeX targets
+### TeX targets
 
-bin/tex/preamble.tex: templates/pdf/preamble.tex
+bin/tex/preamble.tex: engine/templates/preamble.tex
 	mkdir -p bin/tex
 	cp $< $@
 
-bin/tex/soc.tex: chapters.txt templates/pdf/soc-header.tex templates/pdf/footer.tex
+bin/tex/sop.tex: sop.yaml
 	mkdir -p bin/tex
-	echo "\\\\input{preamble.tex}\n\n" > bin/tex/soc.tex
-	cat templates/pdf/soc-header.tex >> bin/tex/soc.tex
-	for ch in $(CHAPTERS); do \
-		echo "\\\\include{$$ch-frag}\n\n" >> bin/tex/soc.tex; \
-	done
-	cat templates/pdf/footer.tex >> bin/tex/soc.tex
+	python engine/scripts/gen_sop_tex.py sop.yaml > bin/tex/sop.tex
 
-bin/tex/%-chap.tex: templates/pdf/chapter-header.tex templates/pdf/footer.tex
+bin/tex/%-chap.tex:
 	mkdir -p bin/tex
-	echo "\\\\input{preamble.tex}\n\n" > $@
-	cat templates/pdf/chapter-header.tex >> $@
-	echo "\\\\include{$(*F)-frag}\n\n" >> $@
-	cat templates/pdf/footer.tex >> $@
+	python engine/scripts/gen_chapter_tex.py $(*F) > $@
 
-bin/tex/%-frag.tex: bin/tex/%.md bin/tex/%.bib
-	if [ -s bin/tex/$(*F).bib ]; then \
-		cd bin/tex && pandoc --listings --natbib --filter pandoc-citeproc --bibliography $(*F).bib $(*F).md -o tmp-$(*F)-frag.tex; \
+bin/tex/%-frag.tex: bin/md/%.md
+	engine/scripts/gen_frag_tex.py "$(*F)" bin/md/$(*F).md > $@
+
+bin/tex/%-body.tex: bin/md/%.md bin/tex/%.bib
+	cd bin/tex && \
+	if [ -s $(*F).bib ]; then \
+		pandoc --listings --natbib --filter pandoc-citeproc --bibliography $(*F).bib ../md/$(*F).md -o $(*F)-body.tex; \
 	else \
-		cd bin/tex && pandoc --listings $(*F).md -o tmp-$(*F)-frag.tex; \
+		pandoc --listings ../md/$(*F).md -o $(*F)-body.tex; \
 	fi
-	echo "\\\\chapter{$(*F)}\n\n" > bin/tex/$(*F)-frag.tex
-	cat bin/tex/tmp-$(*F)-frag.tex >> bin/tex/$(*F)-frag.tex
-	rm bin/tex/tmp-$(*F)-frag.tex
-	if [ -s bin/tex/$(*F).bib ]; then \
-		echo "\n\n\\\\bibliographystyle{plainnat}\n\\\\bibliography{$(*F)}\n" >> bin/tex/$(*F)-frag.tex; \
-	fi
-
-bin/tex/%.md: bin/md/%.md
-	mkdir -p bin/tex
-	cp -R $< $@
 
 bin/tex/%: bin/md/%
 	mkdir -p bin/tex
@@ -131,22 +117,26 @@ bin/tex/%: bin/md/%
 
 bin/tex/%.bib: bin/md/%.bib
 	mkdir -p bin/tex
-	cp -R $< $@
+	cp $< $@
 
 
-# Markdown targets
+### Markdown targets
 
 bin/md/%.md: %
-	cd $< && $(MAKE) source
+	cd $< && $(MAKE) $(<).md
 	mkdir -p bin/md
-	pandoc $(<)/$(<).md -o $@
+	pandoc -s -o $@ $(<)/$(<).md
 
 bin/md/%: %
 	cd $< && $(MAKE) assets
 	mkdir -p bin/md
 	cp -R $(<)/$(<) $@
 
-bin/md/%.bib: %
-	cd $< && $(MAKE) bibliography
+bin/md/%.bib: % bin/md/%.md
 	mkdir -p bin/md
-	cp -R $(<)/$(<).bib $@
+	BIBFILE="$$(python engine/scripts/get_bibliography.py bin/md/$(*F).md)" && \
+	if [ -n "$$BIBFILE" ]; then \
+		cp $(*F)/$$BIBFILE $@; \
+	else \
+		touch $@; \
+	fi

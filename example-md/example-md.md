@@ -1,3 +1,13 @@
+---
+title: Example Markdown
+author:
+  - Jane Doe
+  - Joe Doe
+  - Per Person
+date: 2017-1-1
+bibliography: example-md.bib
+---
+
 # Sections & Paragraphs
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pharetra enim ut eros pharetra, in varius nunc commodo. Curabitur sed tellus efficitur, pretium sapien et, auctor urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris id maximus sapien. Praesent malesuada sem sed felis volutpat porttitor. Aenean commodo cursus metus, in laoreet lacus tincidunt vel. Praesent a quam eu mauris lacinia viverra. Proin aliquet, risus nec interdum laoreet, leo dolor dapibus neque, ac fermentum libero urna posuere mauris. Ut quis ullamcorper ante, ut vulputate erat. Nulla condimentum sagittis dui, vitae facilisis mi blandit nec. Cras id suscipit enim.

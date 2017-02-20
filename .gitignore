@@ -1,6 +1,20 @@
-/bin
-/local
-# OS generated files #
-######################
+# Mac
 .DS_Store
 .DS_Store?
+
+# Python
+*.pyc
+
+# TeX
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.pdf
+*.gz
+
+# Repo
+/bin
+/engine/local/
+.active
