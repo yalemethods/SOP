@@ -1,15 +1,11 @@
-.PHONY: clean source assets bibliography
+.PHONY: clean assets
 
 CHAPTER = example-rmd
 
 clean:
 	rm -rf $(CHAPTER).md $(CHAPTER)/rmd-gen/
 
-source: $(CHAPTER).md
-
 assets: $(CHAPTER).md
-
-bibliography: $(CHAPTER).bib
 
 $(CHAPTER).md: $(CHAPTER).Rmd
 	R -e 'rmarkdown::render(input = "$(CHAPTER).Rmd", \
@@ -22,7 +18,8 @@ $(CHAPTER).md: $(CHAPTER).Rmd
 	                                                  fig.retina = NULL)), \
 	                            pandoc = rmarkdown::pandoc_options( \
 	                                to = "markdown", \
-	                                from = rmarkdown:::rmarkdown_format()), \
+	                                from = rmarkdown:::rmarkdown_format(), \
+	                                args = "--standalone"), \
 	                            clean_supporting = FALSE), \
 	                        output_file = "$(CHAPTER).md", \
 	                        runtime = "static")'

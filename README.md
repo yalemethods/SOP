@@ -1,42 +1,55 @@
 # Standard Operating Procedures
 
-This project is created by members of the Yale Political Science Department for best practices in running surveys on Qualtrics and with Amazon Mechanical Turk workers. 
+This project is created by members of the Yale Political Science Department for best practices in running surveys on Qualtrics and with Amazon Mechanical Turk workers.
 
 ## Organization
 
 The SOP sources are organized by chapters. Each chapter has its own folder containing all files it needs.
 
-To create a new chapter, copy either the `example-latex` folder if you're writing in LaTeX or the `example-md` folder if you're writing in Markdown. Change the folder name to something good, and add the name as a new line in the `chapters.txt` file. Start editing the chapter.
+To create a new chapter, copy one of the example folders:
+
+*   `example-latex` if you're writing in LaTeX
+*   `example-md` if you're writing in Markdown
+*   `example-rmd` if you're writing in Rmarkdown
+
+Change the folder's name to something good and add that name to the `sop.yaml` file. Now you can start writing the chapter!
 
 
 ## How to compile the SOP
 
-The SOP can be compiled into PDFs or HTMLs. Everything is done by an automated build system using [Make](https://www.gnu.org/software/make/) and [Pandoc](http://pandoc.org). In order to make this run, some software is needed (see the "Dependencies" section below).
+The SOP can be compiled into PDFs or HTMLs. Everything is done by an automated build system using [Make](https://www.gnu.org/software/make/), [Pandoc](http://pandoc.org) and [Python](https://www.python.org). You might need to install some software to compile the complete SOP (see the "Dependencies" section below).
 
-To build everything (i.e., PDFs and HTMLs for all chapters), simply run the following command in the top folder:
+To build everything (i.e., the complete SOP PDF and HTMLs for all chapters), simply run the following command in the top folder:
 
 ```shell
 make
 ```
 
-One can also build only PDFs or only HTMLs for all chapters by running either of:
+The result will end up in `bin/sop.pdf` and `bin/html/`.
+
+You can also build part of the PDF (e.g., when you're writing on a chapter and want to see how it turned out):
 
 ```shell
-make html
+# Compile only the PDF (i.e., `bin/sop.pdf`)
 make pdf
+
+# Compile PDF chapters seperately (they end up in the `bin/pdf-chapters/` folder)
+make pdfchapters
+
+# Compile only HTMLs
+make html
+
+# Compile PDF and HTML only for chapter "NAME"
+make all-NAME
+
+# Compile PDF only for chapter "NAME"
+make pdf-NAME
+
+# Compile HTML only for chapter "NAME"
+make html-NAME
 ```
 
-Finally, one can build PDFs and HTMLs for single chapters. In that case, simply add a dash and the chapter name as a suffix. E.g., to build a chapter called "chapter1", run either of:
-
-```shell
-make all-chapter1
-make html-chapter1
-make pdf-chapter1
-```
-
-All compiled documents end up in the `bin/html` or `bin/pdf` folders.
-
-In order the clean the project folder from compiled files, run:
+Finally, you can remove all the compiled files with:
 
 ```shell
 make clean
@@ -50,13 +63,14 @@ The software listed below is needed to build the SOP:
 * **UNIX-like enviroment**
 * [`make`](https://www.gnu.org/software/make/)
 * [`pandoc`](http://pandoc.org) & [`pandoc-citeproc`](https://hackage.haskell.org/package/pandoc-citeproc)
+* [`python 2.7`](https://www.python.org)
 * [`pdflatex`](https://www.tug.org/applications/pdftex/) & [`bibtex`](http://www.bibtex.org)
 
-**However, it's possible to work on and build single chapters without most of these dependencies.** 
+**However, it's possible to work on and build single chapters without most of these dependencies.**
 
 ### Dependencies on Mac OS
 
-`make` is included in Apple's Xcode command line developer tools (whichis already installed on many Macs). You can check if the tools are installed on your computer with:
+`make` is included in Apple's Xcode command line developer tools (which is already installed on many Macs). You can check if the tools are installed on your computer with:
 
 ```shell
 xcode-select -p
@@ -68,7 +82,7 @@ If they are installed, this should return `/Applications/Xcode.app/Contents/Deve
 xcode-select --install
 ```
 
-It's easiest to install `pandoc` and `pandoc-citeproc` with [Homebrew](http://brew.sh), like this:
+The easiest way to install `pandoc` and `pandoc-citeproc` is with [Homebrew](http://brew.sh), like this:
 
 ```shell
 brew install pandoc pandoc-citeproc
@@ -76,7 +90,13 @@ brew install pandoc pandoc-citeproc
 
 If you don't want to use Homebrew, consult [Pandoc's website](http://pandoc.org/installing.html#mac-os-x).
 
-`pdflatex` and `bibtex` is best installed as part of a [TeX distribution](https://tug.org/mactex/).
+The latest versions of Mac OS come with `python` already installed. If you're running an older version, you can install it with [Homebrew](http://brew.sh):
+
+```shell
+brew install python
+```
+
+`pdflatex` and `bibtex` is best installed as part of a [TeX distribution](https://tug.org/mactex/). (This can be done with [Cask](https://caskroom.github.io) if you don't prefer to do it manually.)
 
 
 ### Dependencies on Ubuntu
@@ -84,7 +104,7 @@ If you don't want to use Homebrew, consult [Pandoc's website](http://pandoc.org/
 All dependencies can be installed by Ubuntu's package manager:
 
 ```shell
-sudo apt-get install build-essential pandoc pandoc-citeproc texlive
+sudo apt-get install build-essential pandoc pandoc-citeproc python2.7 texlive
 ```
 
 
@@ -98,4 +118,6 @@ In most cases, the UNIX enviroment you installed includes `make`. If not, you ne
 
 See [Pandoc's website](http://pandoc.org/installing.html#windows) on how to install `pandoc` and `pandoc-citeproc`.
 
-Finally, the two main TeX distributions for windows is [MiKTeX](https://miktex.org) and [TeX Live](http://tug.org/texlive/windows).
+See [Python's manual](https://docs.python.org/2/using/windows.html) for installation instructions for Python 2.7.
+
+Finally, the two main TeX distributions for windows are [MiKTeX](https://miktex.org) and [TeX Live](http://tug.org/texlive/windows).

@@ -1,0 +1,11 @@
+title: Standard Operating Procedures
+
+author: Yale's Political Methodology Group
+
+chapters:
+  - Experiments:
+    - mturk
+  - Examples:
+    - example-latex
+    - example-md
+    - example-rmd

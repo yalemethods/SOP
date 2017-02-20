@@ -1,3 +1,12 @@
+---
+title: Example Rmarkdown
+author:
+  - Jane Doe
+  - Joe Doe
+  - Per Person
+date: 2017-1-1
+---
+
 # Sections & Paragraphs
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pharetra enim ut eros pharetra, in varius nunc commodo. Curabitur sed tellus efficitur, pretium sapien et, auctor urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris id maximus sapien. Praesent malesuada sem sed felis volutpat porttitor. Aenean commodo cursus metus, in laoreet lacus tincidunt vel. Praesent a quam eu mauris lacinia viverra. Proin aliquet, risus nec interdum laoreet, leo dolor dapibus neque, ac fermentum libero urna posuere mauris. Ut quis ullamcorper ante, ut vulputate erat. Nulla condimentum sagittis dui, vitae facilisis mi blandit nec. Cras id suscipit enim.
@@ -27,22 +36,6 @@ You can write math as part of a sentence. For example, did you know that $1+2=3$
 You can also have math in blocks:
 
 $$e = mc^2$$
-
-
-
-# References
-
-Blah blah [see @doe99, pp. 33-35; also @smith04, chap. 1].
-
-Blah blah [@doe99, pp. 33-35 and 38-39].
-
-Blah blah [@smith04; @doe99].
-
-Smith says blah [-@smith04].
-
-@smith04 says blah.
-
-@smith04 [p. 33] says blah.
 
 
 

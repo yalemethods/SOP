@@ -55,6 +55,15 @@ openany,
 
 \chapterstyle{dash}
 
+\makeatletter
+\newcommand{\chapterauthor}[1]{%
+	{\centering\parindent0pt\vspace*{-25pt}%
+		\linespread{1.8}\large\itshape#1%
+		\par\nobreak\vspace*{35pt}}
+	\@afterheading%
+}
+\makeatother
+
 \setsecheadstyle{\normalfont\large\bfseries}
 \setsubsecheadstyle{\normalfont\normalsize\bfseries}
 \setparaheadstyle{\normalfont\normalsize\bfseries}
@@ -97,14 +106,14 @@ openany,
 
 \makeatletter
 \makepsmarks{standard}{
-\createmark{chapter}{both}{shownumber}{\@chapapp\ }{ \quad }
-\createmark{section}{right}{shownumber}{}{ \quad }
-\createplainmark{toc}{both}{\contentsname}
-\createplainmark{lof}{both}{\listfigurename}
-\createplainmark{lot}{both}{\listtablename}
-\createplainmark{bib}{both}{\bibname}
-\createplainmark{index}{both}{\indexname}
-\createplainmark{glossary}{both}{\glossaryname}
+	\createmark{chapter}{both}{shownumber}{\@chapapp\ }{ \quad }
+	\createmark{section}{right}{shownumber}{}{ \quad }
+	\createplainmark{toc}{both}{\contentsname}
+	\createplainmark{lof}{both}{\listfigurename}
+	\createplainmark{lot}{both}{\listtablename}
+	\createplainmark{bib}{both}{\bibname}
+	\createplainmark{index}{both}{\indexname}
+	\createplainmark{glossary}{both}{\glossaryname}
 }
 \makeatother                               %
 
@@ -135,16 +144,9 @@ openany,
 
 \usepackage[unicode=true]{hyperref}   % Internal hyperlinks
 \hypersetup{
-pdfborder={0 0 0},      % No borders around internal hyperlinks
-pdfauthor={I am the Author}, % author
-breaklinks=true
+	pdfborder={0 0 0},      % No borders around internal hyperlinks
+	pdfauthor={I am the Author}, % author
+	breaklinks=true
 }
 \urlstyle{same}
 \usepackage{memhfixc}   %
-
-\author{Yale's Political Methodology Group}
-\title{Standard Operating Procedures}
-
-\begin{document}
-	
-	\renewcommand{\bibname}{References}

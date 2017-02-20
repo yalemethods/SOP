@@ -1,4 +1,0 @@
-example-latex
-example-md
-example-rmd
-mturk
