@@ -1,8 +1,6 @@
-.PHONY: clean assets
+.PHONY: assets
 
-CHAPTER = example-md
-
-clean:
+CHAPTER = $(notdir $(shell pwd))
 
 assets:
 

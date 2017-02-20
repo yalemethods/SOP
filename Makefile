@@ -123,14 +123,14 @@ bin/tex/%.bib: bin/md/%.bib
 ### Markdown targets
 
 bin/md/%.md: %
-	cd $< && $(MAKE) $(<).md
+	cd $< && $(MAKE) $<.md
 	mkdir -p bin/md
-	pandoc -s -o $@ $(<)/$(<).md
+	pandoc -s -o $@ $</$<.md
 
 bin/md/%: %
 	cd $< && $(MAKE) assets
 	mkdir -p bin/md
-	cp -R $(<)/$(<) $@
+	cp -R $</$< $@
 
 bin/md/%.bib: % bin/md/%.md
 	mkdir -p bin/md

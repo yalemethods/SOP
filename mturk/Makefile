@@ -1,8 +1,6 @@
-.PHONY: clean assets
+.PHONY: assets
 
 CHAPTER = mturk
-
-clean:
 
 assets:
 

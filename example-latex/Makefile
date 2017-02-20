@@ -1,6 +1,6 @@
 .PHONY: clean assets
 
-CHAPTER = example-latex
+CHAPTER = $(notdir $(shell pwd))
 
 clean:
 	rm -f $(CHAPTER).md

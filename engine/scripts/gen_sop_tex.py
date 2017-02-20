@@ -30,7 +30,7 @@ front = Template("""\\input{preamble.tex}
 \\chapter{Introduction}
 
 To be added...""").safe_substitute(author = the_sop["author"],
-                                 title = the_sop["title"])
+                                   title = the_sop["title"])
 
 back = """\n
 \\backmatter
