@@ -4,13 +4,11 @@ language: r
 
 r: release
 
-r_packages:
-  - rmarkdown
-
 before_install:
   - tlmgr install eulervm
 
 install:
   - pip install pyyaml
+  - R -e 'install.packages("rmarkdown")'
 
 script: make all pdfchapters
