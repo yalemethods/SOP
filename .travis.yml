@@ -4,7 +4,8 @@ language: r
 
 r: release
 
-r_packages: rmarkdown
+r_packages:
+  - rmarkdown
 
 before_install:
   - tlmgr install eulervm
