@@ -1,5 +1,7 @@
 # Standard Operating Procedures
 
+[![Build Status](https://travis-ci.org/yalemethods/SOP.svg?branch=master)](https://travis-ci.org/yalemethods/SOP)
+
 This project is created by members of the Yale Political Science Department for best practices in running surveys on Qualtrics and with Amazon Mechanical Turk workers.
 
 ## Organization
@@ -12,12 +14,12 @@ To create a new chapter, copy one of the example folders:
 *   `example-md` if you're writing in Markdown
 *   `example-rmd` if you're writing in Rmarkdown
 
-Change the folder's name to something good and add that name to the `sop.yaml` file. Now you can start writing the chapter!
+Change the folder's name to something good and add that name to the `sop.yml` file. Now you can start writing the chapter!
 
 
 ## How to compile the SOP
 
-The SOP can be compiled into PDFs or HTMLs. Everything is done by an automated build system using [Make](https://www.gnu.org/software/make/), [Pandoc](http://pandoc.org) and [Python](https://www.python.org). You might need to install some software to compile the complete SOP (see the "Dependencies" section below).
+The SOP can be compiled into PDFs or HTMLs. Everything is done by an automated build system using [Make](https://www.gnu.org/software/make/), [Pandoc](http://pandoc.org) and R. You might need to install some software to compile the complete SOP (see the "Dependencies" section below).
 
 To build everything (i.e., the complete SOP PDF and HTMLs for all chapters), simply run the following command in the top folder:
 
@@ -64,11 +66,10 @@ The software listed below is needed to build the SOP:
 *   [`make`](https://www.gnu.org/software/make/)
 *   [`pandoc`](http://pandoc.org)
     *   [`pandoc-citeproc`](https://hackage.haskell.org/package/pandoc-citeproc)
-*   [`python 2.7`](https://www.python.org)
-    *   [`PyYAML`](http://pyyaml.org)
 *   [`pdflatex`](https://www.tug.org/applications/pdftex/) & [`bibtex`](http://www.bibtex.org)
 *   [`R`](https://cran.r-project.org)
     *   [`R Markdown`](http://rmarkdown.rstudio.com)
+    *   `yaml`
 
 **However, it's possible to work on and build single chapters without most of these dependencies.**
 
@@ -94,18 +95,6 @@ brew install pandoc pandoc-citeproc
 
 If you don't want to use Homebrew, consult [Pandoc's website](http://pandoc.org/installing.html#mac-os-x).
 
-The latest versions of Mac OS come with `python` already installed. If you're running an older version, you can install it with [Homebrew](http://brew.sh):
-
-```shell
-brew install python
-```
-
-Installing `PyYAML` (a Python packge) can also be done with Homebrew:
-
-```shell
-sudo python -m easy_install pyyaml
-```
-
 `pdflatex` and `bibtex` is best installed as part of a [TeX distribution](https://tug.org/mactex/). (This can be done with [Cask](https://caskroom.github.io) if you don't prefer to do it manually.)
 
 
@@ -114,7 +103,7 @@ sudo python -m easy_install pyyaml
 All dependencies can be installed by Ubuntu's package manager:
 
 ```shell
-sudo apt-get install build-essential pandoc pandoc-citeproc python2.7 texlive
+sudo apt-get install build-essential pandoc pandoc-citeproc texlive
 ```
 
 
@@ -127,7 +116,5 @@ First, you need to install a UNIX-like enviroment. There's several alternatives 
 In most cases, the UNIX enviroment you installed includes `make`. If not, you need to install it. See, e.g., the [GNUwin32 project](http://gnuwin32.sourceforge.net/packages/make.htm).
 
 See [Pandoc's website](http://pandoc.org/installing.html#windows) on how to install `pandoc` and `pandoc-citeproc`.
-
-See [Python's manual](https://docs.python.org/2/using/windows.html) for installation instructions for Python 2.7.
 
 Finally, the two main TeX distributions for windows are [MiKTeX](https://miktex.org) and [TeX Live](http://tug.org/texlive/windows).

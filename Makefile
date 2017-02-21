@@ -12,10 +12,11 @@ CHAPTER_MD = $(addprefix md-,$(CHAPTERS))
 
 # Commands
 
-ACTIVE_CHAPTERS = python engine/scripts/active_chapters.py
-GET_SOP_TEX = python engine/scripts/gen_sop_tex.py
-GET_CHAPTER_TEX = python engine/scripts/gen_chapter_tex.py
-GET_BIBLIOGRAPHY = python engine/scripts/get_bibliography.py
+GET_ACTIVE_CHAPTERS = Rscript engine/scripts/active_chapters.R
+GET_SOP_TEX = Rscript engine/scripts/gen_sop_tex.R
+GET_CHAPTER_TEX = Rscript engine/scripts/gen_chapter_tex.R
+GET_FRAG_TEX = Rscript engine/scripts/gen_frag_tex.R
+GET_BIBLIOGRAPHY = Rscript engine/scripts/get_bibliography.R
 
 
 ### Main targets
@@ -26,8 +27,8 @@ clean:
 	rm -rf bin
 
 # Active chapters
-.active: sop.yaml
-	echo "ACTIVE_CHAPTERS = $$($(ACTIVE_CHAPTERS) sop.yaml)" > .active
+.active: sop.yml
+	echo "ACTIVE_CHAPTERS = $$($(GET_ACTIVE_CHAPTERS) sop.yml)" > .active
 
 include .active
 
@@ -100,16 +101,16 @@ bin/tex/preamble.tex: engine/templates/preamble.tex
 	mkdir -p bin/tex
 	cp $< $@
 
-bin/tex/sop.tex: sop.yaml
+bin/tex/sop.tex: sop.yml
 	mkdir -p bin/tex
-	$(GET_SOP_TEX) sop.yaml > bin/tex/sop.tex
+	$(GET_SOP_TEX) sop.yml > bin/tex/sop.tex
 
 bin/tex/%-chap.tex:
 	mkdir -p bin/tex
 	$(GET_CHAPTER_TEX) $(*F) > $@
 
 bin/tex/%-frag.tex: bin/md/%.md
-	engine/scripts/gen_frag_tex.py "$(*F)" bin/md/$(*F).md > $@
+	$(GET_FRAG_TEX) bin/md/$(*F).md > $@
 
 bin/tex/%-body.tex: bin/md/%.md bin/tex/%.bib
 	cd bin/tex && \
