@@ -17,8 +17,10 @@ addons:
 
 install:
   - pip install pyyaml
-  - mkdir -p ~/R_libs
-  - R -e 'install.packages("rmarkdown", lib = "~/R_libs", repos = "http://cran.rstudio.com/")'
+  - mkdir -p ~/R/library
+  - echo "R_LIBS=~/R/library" > ~/.Renviron
+  - R -e '.libPaths()'
+  - R -e 'install.packages("rmarkdown", lib = "~/R/library", repos = "http://cran.rstudio.com/")'
   - R -e '.libPaths()'
 
 script:
@@ -27,4 +29,3 @@ script:
 
 other:
   - texlive
-  - R -e '.libPaths("~/R_libs"); .libPaths()'
