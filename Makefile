@@ -1,4 +1,4 @@
-CHAPTERS = $(shell ls -d */ | cut -f1 -d'/')
+CHAPTERS = $(shell find ./* -maxdepth 0 -type d -not -name bin -not -name engine | cut -f2 -d'/')
 CHAPTER_ALL = $(addprefix all-,$(CHAPTERS))
 CHAPTER_PDF = $(addprefix pdf-,$(CHAPTERS))
 CHAPTER_HTML = $(addprefix html-,$(CHAPTERS))
@@ -10,15 +10,6 @@ CHAPTER_MD = $(addprefix md-,$(CHAPTERS))
         $(CHAPTER_TEXFRAG) $(CHAPTER_MD)
 
 
-# Commands
-
-GET_ACTIVE_CHAPTERS = Rscript engine/scripts/active_chapters.R
-GET_SOP_TEX = Rscript engine/scripts/gen_sop_tex.R
-GET_CHAPTER_TEX = Rscript engine/scripts/gen_chapter_tex.R
-GET_FRAG_TEX = Rscript engine/scripts/gen_frag_tex.R
-GET_BIBLIOGRAPHY = Rscript engine/scripts/get_bibliography.R
-
-
 ### Main targets
 
 all: html pdf
@@ -28,7 +19,7 @@ clean:
 
 # Active chapters
 .active: sop.yml
-	echo "ACTIVE_CHAPTERS = $$($(GET_ACTIVE_CHAPTERS) sop.yml)" > .active
+	pandoc --data-dir=engine --template=activechapters.none -o $@ $<
 
 include .active
 
@@ -51,7 +42,7 @@ $(CHAPTER_PDF): pdf-% : bin/pdf-chapters/%.pdf
 
 $(CHAPTER_HTML): html-% : bin/html/% bin/html/%.html
 
-$(CHAPTER_TEXFRAG): texfrag-% : bin/tex/% bin/tex/%-frag.tex bin/tex/%-body.tex bin/tex/%.bib
+$(CHAPTER_TEXFRAG): texfrag-% : bin/tex/% bin/tex/%-frag.tex bin/tex/%.bib
 
 $(CHAPTER_MD): md-% : bin/md/% bin/md/%.md bin/md/%.bib
 
@@ -68,12 +59,12 @@ bin/sop.pdf: bin/tex/sop.tex bin/tex/preamble.tex texfrag
 	done && \
 	pdflatex sop && \
 	pdflatex sop
-	cp bin/tex/sop.pdf bin/sop.pdf
+	cp bin/tex/sop.pdf $@
 
 
 ### PDF chapters targets
 
-bin/pdf-chapters/%.pdf: bin/tex/preamble.tex bin/tex/% bin/tex/%-chap.tex bin/tex/%-frag.tex bin/tex/%-body.tex bin/tex/%.bib
+bin/pdf-chapters/%.pdf: bin/tex/%-chap.tex bin/tex/%-frag.tex bin/tex/preamble.tex bin/tex/% bin/tex/%.bib
 	cd bin/tex && \
 	if [ -s bin/tex/$(*F).bib ]; then \
 		cd bin/tex && pdflatex $(*F)-chap && bibtex $(*F)-chap; \
@@ -103,21 +94,18 @@ bin/tex/preamble.tex: engine/templates/preamble.tex
 
 bin/tex/sop.tex: sop.yml
 	mkdir -p bin/tex
-	$(GET_SOP_TEX) sop.yml > bin/tex/sop.tex
+	pandoc --data-dir=engine --template=soc -o $@ $<
 
 bin/tex/%-chap.tex:
 	mkdir -p bin/tex
-	$(GET_CHAPTER_TEX) $(*F) > $@
+	echo "" | pandoc --data-dir=engine --template=chapter --variable=chapter:$(*F) -o $@
 
-bin/tex/%-frag.tex: bin/md/%.md
-	$(GET_FRAG_TEX) bin/md/$(*F).md > $@
-
-bin/tex/%-body.tex: bin/md/%.md bin/tex/%.bib
+bin/tex/%-frag.tex: bin/md/%.md bin/tex/%.bib
 	cd bin/tex && \
 	if [ -s $(*F).bib ]; then \
-		pandoc --listings --natbib --filter pandoc-citeproc --bibliography $(*F).bib ../md/$(*F).md -o $(*F)-body.tex; \
+		pandoc --data-dir=../../engine --template=fragment --listings --natbib --filter pandoc-citeproc --bibliography $(*F).bib -o $(*F)-frag.tex ../md/$(*F).md; \
 	else \
-		pandoc --listings ../md/$(*F).md -o $(*F)-body.tex; \
+		pandoc --data-dir=../../engine --template=fragment --listings -o $(*F)-frag.tex ../md/$(*F).md; \
 	fi
 
 bin/tex/%: bin/md/%
@@ -132,18 +120,22 @@ bin/tex/%.bib: bin/md/%.bib
 ### Markdown targets
 
 bin/md/%.md: %
-	cd $< && $(MAKE) $<.md
+	if [ -e "$</Makefile" ]; then \
+		cd $< && $(MAKE) $<.md; \
+	fi
 	mkdir -p bin/md
 	pandoc -s -o $@ $</$<.md
 
 bin/md/%: %
-	cd $< && $(MAKE) assets
+	if [ -e "$</Makefile" ]; then \
+		cd $< && $(MAKE) assets; \
+	fi
 	mkdir -p bin/md
 	cp -R $</$< $@
 
 bin/md/%.bib: % bin/md/%.md
 	mkdir -p bin/md
-	BIBFILE="$$($(GET_BIBLIOGRAPHY) bin/md/$(*F).md)" && \
+	BIBFILE="$$(pandoc --data-dir=engine --template=bibliography.none bin/md/$(*F).md)" && \
 	if [ -n "$$BIBFILE" ]; then \
 		cp $(*F)/$$BIBFILE $@; \
 	else \

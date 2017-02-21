@@ -1,0 +1,10 @@
+\input{preamble.tex}
+
+\begin{document}
+\renewcommand{\bibname}{References}
+\mainmatter
+
+\include{$chapter$-frag}
+
+\backmatter
+\end{document}
