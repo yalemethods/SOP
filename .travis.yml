@@ -18,10 +18,13 @@ addons:
 install:
   - pip install pyyaml
   - mkdir -p ~/R_libs
-  - R -e '.libPaths("~/R_libs"); .libPaths()'
   - R -e 'install.packages("rmarkdown", lib = "~/R_libs", repos = "http://cran.rstudio.com/")'
+  - R -e '.libPaths()'
 
-script: make all pdfchapters
+script:
+  - R -e '.libPaths()'
+  - make all pdfchapters
 
 other:
   - texlive
+  - R -e '.libPaths("~/R_libs"); .libPaths()'
