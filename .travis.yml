@@ -1,0 +1,14 @@
+dist: trusty
+sudo: false
+language: r
+
+r: release
+
+before_install:
+  - tlmgr install eulervm
+
+install:
+  - pip install pyyaml
+  - R -e 'install.packages("rmarkdown")'
+
+script: make all pdfchapters

@@ -60,11 +60,15 @@ make clean
 
 The software listed below is needed to build the SOP:
 
-* **UNIX-like enviroment**
-* [`make`](https://www.gnu.org/software/make/)
-* [`pandoc`](http://pandoc.org) & [`pandoc-citeproc`](https://hackage.haskell.org/package/pandoc-citeproc)
-* [`python 2.7`](https://www.python.org)
-* [`pdflatex`](https://www.tug.org/applications/pdftex/) & [`bibtex`](http://www.bibtex.org)
+*   **UNIX-like enviroment**
+*   [`make`](https://www.gnu.org/software/make/)
+*   [`pandoc`](http://pandoc.org)
+    *   [`pandoc-citeproc`](https://hackage.haskell.org/package/pandoc-citeproc)
+*   [`python 2.7`](https://www.python.org)
+    *   [`PyYAML`](http://pyyaml.org)
+*   [`pdflatex`](https://www.tug.org/applications/pdftex/) & [`bibtex`](http://www.bibtex.org)
+*   [`R`](https://cran.r-project.org)
+    *   [`R Markdown`](http://rmarkdown.rstudio.com)
 
 **However, it's possible to work on and build single chapters without most of these dependencies.**
 
@@ -94,6 +98,12 @@ The latest versions of Mac OS come with `python` already installed. If you're ru
 
 ```shell
 brew install python
+```
+
+Installing `PyYAML` (a Python packge) can also be done with Homebrew:
+
+```shell
+sudo python -m easy_install pyyaml
 ```
 
 `pdflatex` and `bibtex` is best installed as part of a [TeX distribution](https://tug.org/mactex/). (This can be done with [Cask](https://caskroom.github.io) if you don't prefer to do it manually.)
