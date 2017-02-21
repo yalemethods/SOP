@@ -19,7 +19,7 @@ install:
   - pip install pyyaml
   - mkdir -p ~/R_libs
   - R -e '.libPaths("~/R_libs"); .libPaths()'
-  - R -e 'install.packages("rmarkdown", repos = "http://cran.rstudio.com/")'
+  - R -e 'install.packages("rmarkdown", libs = "~/R_libs", repos = "http://cran.rstudio.com/")'
 
 script: make all pdfchapters
 
