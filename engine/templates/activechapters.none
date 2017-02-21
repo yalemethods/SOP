@@ -1,0 +1,1 @@
+ACTIVE_CHAPTERS = $for(content)$$for(content.chapters)$$content.chapters$$sep$ $endfor$ $endfor$

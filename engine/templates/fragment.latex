@@ -1,0 +1,15 @@
+$if(title)$
+\chapter{$title$}
+$else$
+\chapter{Untitled}
+$endif$
+$if(author)$
+\chapterauthor{$for(author)$$author$$sep$, $endfor$}
+$endif$
+
+$body$
+
+$if(bibliography)$
+\bibliographystyle{plainnat}
+\bibliography{$bibliography$}
+$endif$

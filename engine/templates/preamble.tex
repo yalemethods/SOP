@@ -78,11 +78,26 @@ openany,
 \chapterstyle{dash}
 
 \makeatletter
+\def\makeauthorlist#1{%
+	\count@\z@
+	\@for\tmp:=#1\do{\advance\count@\@ne}%
+	\@for\tmp:=#1\do{%
+		\advance\count@\m@ne
+		\edef\tmp{%
+			\noexpand\expandafter\zap@space\tmp\@gobble{} \@empty}%
+		\tmp
+		\ifnum\count@>\@ne,%
+		\else
+		\ifnum\count@=\@ne\ \&%
+		\fi\fi}}
+\makeatother
+
+\makeatletter
 \newcommand{\chapterauthor}[1]{%
-  {\centering\parindent0pt\vspace*{-25pt}%
-    \linespread{1.8}\large\itshape#1%
-    \par\nobreak\vspace*{35pt}}
-  \@afterheading%
+	{\centering\parindent0pt\vspace*{-25pt}%
+		\linespread{1.8}\large\itshape\makeauthorlist{#1}%
+		\par\nobreak\vspace*{35pt}}
+	\@afterheading%
 }
 \makeatother
 
