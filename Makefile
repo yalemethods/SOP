@@ -10,6 +10,14 @@ CHAPTER_MD = $(addprefix md-,$(CHAPTERS))
         $(CHAPTER_TEXFRAG) $(CHAPTER_MD)
 
 
+# Commands
+
+ACTIVE_CHAPTERS = python engine/scripts/active_chapters.py
+GET_SOP_TEX = python engine/scripts/gen_sop_tex.py
+GET_CHAPTER_TEX = python engine/scripts/gen_chapter_tex.py
+GET_BIBLIOGRAPHY = python engine/scripts/get_bibliography.py
+
+
 ### Main targets
 
 all: html pdf
@@ -19,7 +27,7 @@ clean:
 
 # Active chapters
 .active: sop.yaml
-	echo "ACTIVE_CHAPTERS = $$(python engine/scripts/active_chapters.py sop.yaml)" > .active
+	echo "ACTIVE_CHAPTERS = $$($(ACTIVE_CHAPTERS) sop.yaml)" > .active
 
 include .active
 
@@ -94,11 +102,11 @@ bin/tex/preamble.tex: engine/templates/preamble.tex
 
 bin/tex/sop.tex: sop.yaml
 	mkdir -p bin/tex
-	python engine/scripts/gen_sop_tex.py sop.yaml > bin/tex/sop.tex
+	$(GET_SOP_TEX) sop.yaml > bin/tex/sop.tex
 
 bin/tex/%-chap.tex:
 	mkdir -p bin/tex
-	python engine/scripts/gen_chapter_tex.py $(*F) > $@
+	$(GET_CHAPTER_TEX) $(*F) > $@
 
 bin/tex/%-frag.tex: bin/md/%.md
 	engine/scripts/gen_frag_tex.py "$(*F)" bin/md/$(*F).md > $@
@@ -134,7 +142,7 @@ bin/md/%: %
 
 bin/md/%.bib: % bin/md/%.md
 	mkdir -p bin/md
-	BIBFILE="$$(python engine/scripts/get_bibliography.py bin/md/$(*F).md)" && \
+	BIBFILE="$$($(GET_BIBLIOGRAPHY) bin/md/$(*F).md)" && \
 	if [ -n "$$BIBFILE" ]; then \
 		cp $(*F)/$$BIBFILE $@; \
 	else \
