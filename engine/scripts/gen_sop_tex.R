@@ -4,8 +4,8 @@ the_sop <- commandArgs(trailingOnly = TRUE)[1]
 sop_meta <- yaml::yaml.load_file(the_sop)
 
 front <- "\\input{preamble.tex}\n
-\\author{%s}
-\\title{%s}\n
+\\title{%s}
+\\author{%s}\n
 \\begin{document}
 
 \\renewcommand{\\bibname}{References}
