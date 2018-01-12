@@ -90,7 +90,7 @@ sudo apt-get install build-essential pandoc pandoc-citeproc r-base texlive
 Install the required R packages with:
 
 ```shell
-Rscript -e "install.packages(c('rmarkdown', 'yaml'))"
+Rscript -e "install.packages(c('rmarkdown', 'yaml'), repos='http://cran.r-project.org')"
 ```
 
 
