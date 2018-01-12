@@ -475,34 +475,34 @@ impute <- function(x, ord = TRUE) {
 
 Note that this function only performs imputation when missingness is indicated by `NA` values; this may not generally be the case in survey data. For instance, researchers familiar with the ANES will be aware that missing values can take a variety of coding values, including negative numbers. As is implied by the `impute()` function offered above, missing values are often denoted with `99` or `-99`, though other codings such as `90` and `95` are frequently used (e.g., to indicate "Don't Know" or "Other" responses). Converting codings of missingness can be more complex if working with variables that include actual values greater than 90 or less than 0 (e.g., feeling thermometers or numeric party ID codings). The following function is provided for the researcher to convert values to `NA` as needed; the researcher will note that the function excludes all common codings of missingness by default; the researcher can also elect to exclude values such as `90`, `95`, and `99`, negative values, or both, by setting the `exclude` argument to `"90s"`, `"negatives"`, or `"all"`, respectively:
 
-    ```r
-        conv_NA <- function (x, exclude = NULL) {
-              if (!is.null(exclude)) {
-                  if (is.character(exclude)) {
-                      if (exclude == "all") {
-                          x[x %in% c(998, 999)] <- NA
-                      } else {
-                        if (exclude == "90s") {
-                            x[x < 0 | x %in% c(998, 999)] <- NA
-                        } else {
-                          if (exclude == "negatives") {
-                              x[x %in% c(90, 95, 99, 998, 999)] <- NA
-                          } else {
-                            x[x %in% exclude] <- NA
-                          }
-                        }
+```r
+conv_NA <- function (x, exclude = NULL) {
+                     if (!is.null(exclude)) {
+                         if (is.character(exclude)) {
+                             if (exclude == "all") {
+                                 x[x %in% c(998, 999)] <- NA
+                             } else {
+                               if (exclude == "90s") {
+                                   x[x < 0 | x %in% c(998, 999)] <- NA
+                               } else {
+                                 if (exclude == "negatives") {
+                                     x[x %in% c(90, 95, 99, 998, 999)] <- NA
+                                 } else {
+                                   x[x %in% exclude] <- NA
+                                 }
+                               }
+                             }
+                         } else {
+                           x[x %in% exclude] <- NA
+                         }
+                     } else {
+                       if (is.null(exclude)) {
+                           x[x < 0 | x %in% c(90, 95, 99, 998, 999)] <- NA
+                       }
                      }
-                  } else {
-                    x[x %in% exclude] <- NA
-                    }
-              } else {
-                if (is.null(exclude)) {
-                    x[x < 0 | x %in% c(90, 95, 99, 998, 999)] <- NA
-                }
-                }
-                return(x)
-              }
-    ```
+                     return(x)
+}
+```
 
 #### Recoding variables
 
