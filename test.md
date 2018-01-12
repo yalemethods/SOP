@@ -501,7 +501,7 @@ conv_NA <- function (x, exclude = NULL) {
                        }
                      }
                      return(x)
-}
+           }
 ```
 
 #### Recoding variables
