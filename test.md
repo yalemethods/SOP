@@ -454,24 +454,24 @@ For the purposes of imputation, it is recommended that the researcher follow the
 * In all other cases, mean or mode imputation should be employed; it is recommended that the researcher use mean imputation for all ordinal or binary variables, whereas mode imputation is recommended for categorical/nominal variables.
 	The below `impute()` function will assess missingness in variables, and will perform imputation automatically, where appropriate (note that `impute()` performs mean imputation by default; the function will perform mode imputation if the researcher sets the `ord` argument to `FALSE`):
 	
-    ```r
-    impute <- function(x, ord = TRUE) {
-      if (ord) {
-        if (sum(is.na(x)) <= 20) {
-          x[is.na(x)] <- mean(x, na.rm = TRUE)
-        } else {
-          x[is.na(x)] <- -99
-        }
-      } else {
-        if (sum(is.na(x)) <= 20) {
-          x[is.na(x)] <- num_mode(x)
-        } else {
-          x[is.na(x)] <- -99
-        }
-      }
-      return(x)
-    }
-    ```
+```r
+impute <- function(x, ord = TRUE) {
+                   if (ord) {
+                       if (sum(is.na(x)) <= 20) {
+                           x[is.na(x)] <- mean(x, na.rm = TRUE)
+                       } else {
+                       x[is.na(x)] <- -99
+                       }
+                   } else {
+                     if (sum(is.na(x)) <= 20) {
+                         x[is.na(x)] <- num_mode(x)
+                     } else {
+                       x[is.na(x)] <- -99
+                     }
+                   }
+                   return(x)
+          }
+```
 
 Note that this function only performs imputation when missingness is indicated by `NA` values; this may not generally be the case in survey data. For instance, researchers familiar with the ANES will be aware that missing values can take a variety of coding values, including negative numbers. As is implied by the `impute()` function offered above, missing values are often denoted with `99` or `-99`, though other codings such as `90` and `95` are frequently used (e.g., to indicate "Don't Know" or "Other" responses). Converting codings of missingness can be more complex if working with variables that include actual values greater than 90 or less than 0 (e.g., feeling thermometers or numeric party ID codings). The following function is provided for the researcher to convert values to `NA` as needed; the researcher will note that the function excludes all common codings of missingness by default; the researcher can also elect to exclude values such as `90`, `95`, and `99`, negative values, or both, by setting the `exclude` argument to `"90s"`, `"negatives"`, or `"all"`, respectively:
 
@@ -570,6 +570,7 @@ When working with randomized versions of a question (e.g., two questions that ra
 	
 	treatment <- coalesce(version_1, version_2, version_3)
 	```
+
 
 # References
 
