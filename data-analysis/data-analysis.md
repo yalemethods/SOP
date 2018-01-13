@@ -1,5 +1,5 @@
 ---
-title: Example Markdown
+title: Data Analysis and Cleaning
 author:
   - Jonathon Baron
 date: 2018-1-12
@@ -240,3 +240,5 @@ version_3 <- c(NA, NA, 1, NA, NA, NA, 2, NA, NA, NA)
 treatment <- coalesce(version_1, version_2, version_3)
 ```
 
+## Advanced
+means, bootstrap

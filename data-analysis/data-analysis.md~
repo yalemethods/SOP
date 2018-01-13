@@ -1,5 +1,5 @@
 ---
-title: Example Markdown
+title: Data Analysis and Cleaning
 author:
   - Jonathon Baron
 date: 2018-1-12
@@ -241,4 +241,4 @@ treatment <- coalesce(version_1, version_2, version_3)
 ```
 
 ## Advanced
-
+means, bootstrap
