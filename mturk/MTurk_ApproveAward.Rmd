@@ -1,0 +1,127 @@
+---
+title: "MTurkR code for approving/awarding bonuses"
+author: "Molly Offer-Westort"
+date: "`r format(Sys.Date())`"
+output: github_document
+---
+
+## Setup
+
+If starting a new session, set AWS access key and load packages.
+```{r files, echo=FALSE}
+# AWS credentials file
+f <- file.path("~", "Box Sync", "Admin", "Mturk_Credentials", "credentials.csv")
+credentials_file <- read.csv(file = f)
+# Behavior raw data
+f <- file.path("~", "Box Sync", "Research", "Behavior", 
+               "Shared_Behavior research MOW", "group-shocks", "fall2017", 
+               "MTurk", "Raw_Data", "Group_identity_formation_cleaned.csv")
+```
+
+```{r aws}
+Sys.setenv(AWS_ACCESS_KEY_ID = credentials_file$Access.Key.Id)
+Sys.setenv(AWS_SECRET_ACCESS_KEY = credentials_file$Secret.Access.Key)
+```
+
+```{r library}
+library(MTurkR)
+library(foreign)
+library(knitr)
+```
+
+```{r not_verbose, echo=FALSE}
+# set verbose to FALSE
+options(MTurkR.verbose = FALSE)
+```
+
+## Approve assignments, award bonuses
+```{r approval, eval = FALSE}
+workers <- GetAssignments(hit = GetReviewableHITs()[,1]) # get all reviewable HITs
+workers <- workers[which(is.na(workers$ApprovalTime)),] # ignore already approved ones
+ApproveAssignment(workers$AssignmentId) # approve assignments
+```
+
+Match to survey (here, the filepath has already been saved as `f`). 
+```{r match, eval = FALSE}
+dat <- read.csv(file=f, as.is=TRUE) # survey data
+workers$surveycode <- trimws(workers$surveycode, which = "both")
+```
+
+Assign bonuses. 
+```{r bonus, eval = FALSE}
+dat$bonus <- dat$stage1/100 # bonus
+dat$contrib_text <- paste0("Thank you for participating in this survey. ",
+                           "Your bonus is calculated as follows: Your earnings were ",
+                           dat$stage1,
+                           " tokens. Each token is worth $0.01. Your bonus is $",
+                           dat$stage1/100, ". ")
+
+
+payout <- merge(workers, dat[, c("bonus", "contrib_text", "confirmation_code")], 
+                by.x = "surveycode", 
+                by.y = "confirmation_code", all.x=TRUE)
+
+# Bonus workers with valid survey codes
+payout <- payout[which(payout$surveycode!=""), ]
+
+
+# Pay bonus
+GrantBonus(workers=payout$WorkerId, assignments=payout$AssignmentId,
+           amounts=payout$bonus, reasons=payout$contrib_text)
+```
+
+When ready, dispose HITs using `DisposeHIT(hit$HITId)`. Search HITs to confirm that all assignments have been completed/approved. 
+```{r dispose, eval = FALSE}
+SearchHITs()
+```
+
+
+## Recontact workers for multiple waves
+
+Qualifications can also be assigned to recontact workers. 
+
+Specify the vector of unique IDs to be used for recontacting respondents to the preceding wave(s). Here, if we're recontacting workers from the HITs we can just use `workers$WorkerId`. 
+
+Generate a Qualification Type for the subjects to be recontacted, and assign the qualification type to the relevant workers:
+
+```{r , eval = FALSE}  
+recontact_qual <-  
+  CreateQualificationType(
+    name = "follow-up_recontacts", status = "Active",
+    description = "Workers from Prior Wave to be Recontacted",
+    keywords = "")
+
+recontact_assign_out <-
+  AssignQualification(qual = recontact_qual$QualificationTypeId, 
+                      workers = workers$WorkerId)
+```
+
+After specifying that workers must have been given this qualification type in MTurk, `MTurkR` can also be used to notify the relevant respondents about the follow-up survey via email:
+
+```{r email, eval = FALSE} 
+email.subject <- paste("Example Email Subject here")
+email.message <- paste(
+  "Hello,", 
+  "Example message reminding respondents to the prior wave(s) about the preceding HIT(s), requesting that they participate in the following survey, as well.",
+  "Include directions regarding how to find the new HIT using a unique keyword.",
+  sep = "\n\n")
+
+recontact_email_out <- ContactWorker(subject = email.subject,
+                                     msgs = email.message,
+                                     workers = workers$WorkerId,
+                                     batch = TRUE)
+
+table(recontact_email_out$Valid)
+```
+
+When recontacting workers, save the recontact output (`recontact_assign_out` and `recontact_email_out`in the above example) and email text (`email.subject` and `email.message` in the above example) with other data files.
+
+
+
+```{r purl, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
+# save R chunks as a separate file
+options(knitr.duplicate.label = 'allow')
+input  = knitr::current_input()  # filename of input document
+output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
+knitr::purl(input,output,quiet=T)
+```

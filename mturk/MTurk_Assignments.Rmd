@@ -1,0 +1,320 @@
+---
+title: "MTurkR code for group identification project"
+author: "Molly Offer-Westort"
+date: "`r format(Sys.Date())`"
+output: github_document
+---
+
+This is code that is used to run sequential batches of HITs on Amazon Mechanical 
+Turk. It is built adapting and extending code from the below MTurkR resources, primarily the MTurkR wiki.
+
+For reference:
+
+- Setting up an Amazon Web Services account: <https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMechanicalTurkGettingStartedGuide/SetUp.html>
+- MTurkR wiki: <https://github.com/cloudyr/MTurkR/wiki>
+  - To set up MTurkR and get access keys: <https://github.com/cloudyr/MTurkR/wiki/Installation>
+  - To circumvent batch pricing: <https://github.com/cloudyr/MTurkR/wiki/Circumventing-Batch-Pricing>
+- Streamline Your Mechanical Turk Workflow with MTurkR: <https://www.r-bloggers.com/streamline-your-mechanical-turk-workflow-with-mturkr/>
+
+## Setup
+```{r files, echo=FALSE}
+# To be used later:
+# AWS credentials file
+f <- file.path("~", "Box Sync", "Admin", "Mturk_Credentials", "credentials.csv")
+credentials_file <- read.csv(file = f)
+# MOW worker ID
+f <- file.path("~", "Box Sync", "Admin", "Mturk_Credentials", 
+               "MOW_workerid.csv")
+MOW <- readLines(f)
+# Behavior raw data
+f <- file.path("~", "Box Sync", "Research", "Behavior", 
+               "Shared_Behavior research MOW", "group-shocks", "fall2017", 
+               "MTurk", "Raw_Data")
+```
+
+Set AWS access key. 
+(Mine is stored in a csv file, which I read in and saved as the object 
+`credentials_file`.)
+```{r aws}
+Sys.setenv(AWS_ACCESS_KEY_ID = credentials_file$Access.Key.Id)
+Sys.setenv(AWS_SECRET_ACCESS_KEY = credentials_file$Secret.Access.Key)
+```
+
+Install (if necessary) and load R packages `MTurkR` and `foreign` (and `knitr` for `purl()` function to extract `R` code. )
+```{r install, eval=FALSE}
+install.packages("MTurkR")
+install.packages("foreign")
+install.packages("knitr")
+```
+
+```{r library}
+library(MTurkR)
+library(foreign)
+library(knitr)
+```
+
+```{r not_verbose, echo=FALSE}
+# set verbose to FALSE
+options(MTurkR.verbose = FALSE)
+```
+
+####Sandbox
+While testing, use the sandbox, however, worker-specific code will not work. 
+```{r sandbox, eval = FALSE}
+options(MTurkR.sandbox = TRUE)
+```
+
+#### Assign a qualification to a specific worker
+
+As an example, my workerID is stored in a csv file, which I read in and saved as the value stored in `MOW`.
+
+Create a qualification for just MOW (only need to create this once).
+```{r MOW, eval = FALSE}
+MOWqual <- CreateQualificationType(paste('Qualification for Worker', MOW),
+                                   paste('Temporary Qualification for', MOW),
+                                   'Active')
+```
+
+If already created qualification for MOW, get it. Qualification IDs can also be searched at: <https://requester.mturk.com/qualification_types> or just `SearchQualificationTypes()`. 
+```{r MOWsearch}
+MOWqual <- SearchQualificationTypes(paste('Qualification for Worker', MOW))
+```
+Assign Qualification to MOW only (if not already assigned).
+```{r MOWassign}
+AssignQualification(MOWqual$QualificationTypeId, MOW)
+```
+Confirm that it has been assigned. 
+```{r MOWcheck}
+GetQualificationScore(MOWqual$QualificationTypeId, MOW)$Valid==TRUE
+```
+Use `RevokeQualification()` or `DisposeQualificationType()` if necessary to 
+start fresh.
+
+## Starting a new project
+
+Assign qualification to workers who have completed a similar assignment 
+previously. 
+
+Create a new qualification (again, this only needs to be done once). 
+```{r block, eval = FALSE}
+blockqual <-
+  CreateQualificationType(
+    name="Qualification to Prevent Retakes",
+    description="This qualification is for people who have worked for me on this task before.",
+    status = 'Active',
+    keywords="Worked for me before",
+    auto = FALSE)
+```
+
+Or find the qualification ID once it already exists.
+```{r blockseach}
+blockqual <- SearchQualificationTypes("Qualification to Prevent Retakes")
+```
+
+Assign the qualification to any workers who have completed a similar 
+assignment previously, if necessary. Here, `WorkerIds` would be a vector of 
+worker IDs. 
+```{r blockassign, eval = FALSE}
+AssignQualification(
+  qual = blockqual$QualificationTypeId,
+  workers = WorkerIds)
+```
+
+#### Set up qualification requirements
+```{r requirements}
+initial_reqs <- paste0(
+  # Worker_Locale == US
+  GenerateQualificationRequirement("Locale", "==", "US", preview = TRUE),
+  
+  # Worker_PercentAssignmentsApproved >= 95
+  GenerateQualificationRequirement("Approved", ">=", "95", qual.number = 2),
+  
+  # Worker_NumberHITsApprove >= 50
+  GenerateQualificationRequirement("NumberApproved", ">=", "50", qual.number = 3),
+  
+  # Any block_qualifications
+  GenerateQualificationRequirement(blockqual$QualificationTypeId, "DoesNotExist", "", qual.number = 4)#,
+  
+  # Leave this in for testing for MOW only
+  # GenerateQualificationRequirement(MOWqual$QualificationTypeId, "Exists", "", qual.number = 5)
+)
+```
+
+Create QualificationType for already completed hit, which blocks past workers
+(again, only needs to be created once).
+```{r requirements2, eval = FALSE}
+qual <- CreateQualificationType("Already completed HIT",
+                                "Already completed identical HIT before.",
+                                "Active")
+```
+Find the qualification ID once it already exists. 
+```{r requirements3}
+qual <- SearchQualificationTypes("Already completed HIT")
+```
+Generate "DoesNotExist" QualificationRequirement structure for later hits.
+```{r requirements4}
+later_reqs <- paste0(initial_reqs, 
+                   GenerateQualificationRequirement(qual$QualificationTypeId, 
+                                                    "DoesNotExist", "", 
+                                                    qual.number = 6))
+```
+
+####Set HITType parameters
+```{r hittypes, eval = FALSE}
+total <- 60 # total number of total desired assignments
+
+title <- "5 minute survey, $.50 plus bonus"
+description <- "Quick survey. Fun and easy. Payment is auto-approved in 5 days."
+reward <- ".50"
+duration <- seconds(hours = 1)
+auto.approval.delay <- seconds(days = 5)
+keywords = "survey, questionnaire"
+qual.req = initial_reqs
+
+# create HITType w/o qualification requirement
+hittype1 <- RegisterHITType(title = title,
+                            description = description,
+                            reward = reward, 
+                            duration = duration, 
+                            auto.approval.delay = auto.approval.delay,
+                            keywords = keywords,
+                            qual.req = qual.req )
+
+# create HITType with qualification requirement
+hittype2 <- RegisterHITType(title = title,
+                            description = description,
+                            reward = reward, 
+                            duration = duration, 
+                            auto.approval.delay = auto.approval.delay,
+                            keywords = keywords,
+                            qual.req = later_reqs )
+```
+
+####Create the first HIT. 
+The first batch of HITs is assigned using `initial_reqs`; assignment then proceeds iteratively, such that, in each wave, only workers who have *not* completed the HIT can be assigned; this is performed using a repeat loop.
+
+Set a variable to index number of completed assignments.
+```{r completed}
+completed <- 0
+```
+
+Set a list to store assignments into.
+```{r allassigns}
+allassigns <- list()
+```
+
+Set the number of assignments per iteration.
+```{r assignmentsPerBatch}
+assignmentsPerBatch <- 9
+```
+
+HITs can be created with a layoutID, or with an html file. layoutIDs can be 
+found using the instructions here: <https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_HITLayoutArticle.html#ApiReference_HITLayoutArticle-creatingHITlayoutId>
+
+```{r layoutid_layout, eval = FALSE}
+hit <- CreateHIT(hit.type = hittype1$HITTypeId,
+                 assignments = assignmentsPerBatch,
+                 expiration = seconds(days = 7),
+                 hitlayoutid = layoutid)
+```
+
+```{r html_layout, eval = FALSE}
+f <- file("advert.html")
+a <- GenerateHTMLQuestion(file=f)
+
+hit <- CreateHIT(hit.type = hittype1$HITTypeId,
+                 assignments = assignmentsPerBatch, 
+                 expiration = seconds(days = 7),
+                 question = a$string)
+```
+
+
+For an interactive session, you can hold creation of new HITs until approval. 
+```{r function}
+fun <- function() {
+  ANSWER <- ""
+  while( ANSWER!="break" & ANSWER!="continue" ){
+    ANSWER <- tolower(readline("Please type 'continue' when you are ready to create a new HIT, or 'break' to stop HIT creation: "))
+    if (ANSWER!="break"& ANSWER!="continue") cat("Please re-enter text. \n")
+  }
+  if (ANSWER == "break") {
+    cat("breaking loop. \n")
+    break
+  }
+  if (ANSWER == "continue") cat("Creating new HIT...\n")
+}
+```
+
+```{r verbose}
+# set verbose to TRUE for output
+options(MTurkR.verbose = FALSE)
+```
+
+```{r loop, eval = FALSE}
+# start the loop
+repeat {
+  # Get the number of available assignments.
+  g <- GetHIT(hit$HITId, response.group = "HITAssignmentSummary")$HITs$NumberOfAssignmentsAvailable
+  
+  # check if all assignmentsPerBatch have been completed
+  if (as.numeric(g) == 0) {
+    # if yes, retrieve submitted assignments
+    w <- length(allassigns) + 1
+    allassigns[[w]] <- GetAssignments(hit = hit$HITId)
+    
+    # assign blocking qualification to workers who completed previous HIT
+    AssignQualification(qual$QualificationTypeId, 
+                        allassigns[[w]]$WorkerId)
+    
+    # increment number of completed assignments
+    completed <- completed + assignmentsPerBatch
+    
+    # optionally display total assignments completed thus far
+    if (getOption("MTurkR.verbose")) {
+      message(paste("Total assignments completed: ", completed, "\n", sep=""))
+    }
+    
+    # check if enough assignments have been completed
+    if(completed < total) {
+      
+      if(interactive()) fun() # check to see if you're ready to create the next hit
+      
+      # don't create more additional assignments than total
+      if(completed + assignmentsPerBatch > total) { 
+        assignmentsPerBatch <- total - completed
+      }
+      
+      # if ready, create another HIT
+      hit <- CreateHIT(hit.type = hittype2$HITTypeId,
+                       assignments = assignmentsPerBatch,
+                       expiration = seconds(days = 7),
+                       question = a$string)
+      
+      # wait some time and check again
+      Sys.sleep(180)
+    } else {
+      # if total met, exit loop:
+      cat("Total met")
+      break
+    }
+  } else {
+    # wait some time and check again
+    Sys.sleep(30) # seconds to wait between checking for assignments
+  }
+}
+
+```
+Save all assignments for all HITs as a data.frame. 
+```{r save, eval = FALSE}
+m <- do.call("rbind", allassigns)
+write.csv(m, paste(f, "/MTurkAssignments"))
+```
+Then, approve HITs. Useful commands if something goes wrong: `ExpireHIT(hit$HITId)`, `DisposeHIT(hit$HITId)`, `SearchHITs()`. 
+
+```{r purl, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
+# save R chunks as a separate file
+options(knitr.duplicate.label = 'allow')
+input  = knitr::current_input()  # filename of input document
+output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
+knitr::purl(input,output,quiet=T)
+```
