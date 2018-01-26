@@ -130,7 +130,7 @@ bin/md/%: %
 	if [ -e "$</Makefile" ]; then \
 		cd $< && $(MAKE) assets; \
 	fi
-	mkdir -p bin/md
+	mkdir -p $</$< bin/md
 	cp -R $</$< $@
 
 bin/md/%.bib: % bin/md/%.md
