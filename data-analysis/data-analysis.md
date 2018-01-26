@@ -33,7 +33,7 @@ Note the use of the `header = TRUE`, `stringsAsFactors = FALSE`, and `row.names 
 ### Ensuring concordance betwen MTurk and Qualtrics
 As noted above, the Qualtrics data may include responses by more individuals than were recruited on MTurk; this may occur when a respondent does not properly respond to the posted HIT on MTurk, but navigates to the Qualtrics survey nonetheless. To exclude these respondents, the researcher will need to download data on HITs from MTurk, and compare the included `Answer.surveycode` variable from the MTurk data with the `confirmation_code` variable included in the Qualtrics dataset.
 
-As noted above, MTurk data can be easily downloaded via Manage &rarr; Results; the resultant `.csv` can then be loaded into `R` as noted above.
+As noted above, MTurk data can be easily downloaded via Manage > Results; the resultant `.csv` can then be loaded into `R` as noted above.
 
 With both datasets loaded into `R`, the researcher may now remove all rows from the Qualtrics dataset that do not yield matches with the MTurk data by subsetting the Qualtrics data as follows:
 

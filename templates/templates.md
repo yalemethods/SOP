@@ -3,7 +3,7 @@ title: Templates
 author:
   - Jonathon Baron
 date: 2018-1-12
-bibliography: templates-md.bib
+bibliography: templates.bib
 ---
 
 # Templates
@@ -17,7 +17,7 @@ Qualtrics templates are provided in both `.qsf` and `.pdf` formats. `.pdf` files
 Included below are survey templates that host covariate questions:
 
 | Filename | Description |
-|:--------:|:-----------:| 
+|:--------:|:-----------:|
 | `q-anes_demographics_template.qsf` | Includes full template for basic demographic questions from Q-ANES survey |
 | `q-anes_demographics_template.pdf` | Presents full demographic-question template as provided to subjects |
 | `q-anes_pre-election_template.qsf` | Includes full template for pre-election Q-ANES survey |
@@ -30,5 +30,5 @@ Included below will be additional survey templates with specific design elements
 
 ## MTurk templates
 | Filename | Description |
-|:--------:|:-----------:| 
+|:--------:|:-----------:|
 | `mturk_template.md` | Includes full template for an MTurk HIT for survey research |
