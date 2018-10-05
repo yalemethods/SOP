@@ -78,7 +78,7 @@ Quotas may not perform as desired when many respondents begin taking the survey 
 
 ### End-of-survey
 
-At each point in the survey when respondents may be deemed ineligible to continue (based on consent, recruitment requirements, etc.), survey flow should direct ineligible respondents to an End-of-survey element. These elements can be customized using stored messages in the Qualtrics Library, so that respondents who end the survey prior to completion are not presented with an end-of-survey confirmation code for entry into MTurk.
+At each point in the survey when respondents may be deemed ineligible to continue (based on consent, recruitment requirements, etc.), survey flow should direct ineligible respondents to an end-of-survey element. These elements can be customized using stored messages in the Qualtrics Library, so that respondents who end the survey prior to completion are not presented with an end-of-survey confirmation code for entry into MTurk.
 
 ![End of Survey Message Example](mturk/end_of_survey_message.jpg)
 
