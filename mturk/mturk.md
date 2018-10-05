@@ -78,15 +78,15 @@ Quotas may not perform as desired when many respondents begin taking the survey 
 
 ### End-of-survey
 
-At each point in the survey when respondents may be deemed ineligible to continue (based on consent, recruitment requirements, etc.), survey flow should direct ineligible respondents to an End-of-survey element. These elements can be customized using stored messages in the Qualtrics Library, so that respondents who end the survey prior to completion are not presented with an end-of-survey confirmation code for entry into MTurk.
+At each point in the survey when respondents may be deemed ineligible to continue (based on consent, recruitment requirements, etc.), survey flow should direct ineligible respondents to an end-of-survey element. These elements can be customized using stored messages in the Qualtrics Library, so that respondents who end the survey prior to completion are not presented with an end-of-survey confirmation code for entry into MTurk.
 
 ![End of Survey Message Example](mturk/end_of_survey_message.jpg)
 
-End-of-survey confirmation codes can be generated immediately prior to the final End-of-survey element using a Web Service element, as below.
+End-of-survey confirmation codes can be generated immediately prior to the final end-of-survey element using a Web Service element, as below.
 
 ![Web Service Example](mturk/web_service.jpg)
 
-Respondents who complete the survey should then receive an End-of-survey messages such that the confirmation code is piped into the message. Ensure that the Embedded Data term "called" in the Web Service element matches that defined in the message written and stored in the Qualtrics Library (see above image).
+Respondents who complete the survey should then receive an end-of-survey messages such that the confirmation code is piped into the message. Ensure that the Embedded Data term "called" in the Web Service element matches that defined in the message written and stored in the Qualtrics Library (see above image).
 
 ![End of Survey Example](mturk/eos.jpg)
 
