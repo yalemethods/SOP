@@ -138,7 +138,7 @@ Examine potential issues and data structure by downloading data via Data & Analy
 
 When conducting research as part of a research lab, surveys should be "beta tested" with lab members using the Anonymous Link for web distribution. Instruct lab members to also attempt to "break" the survey functionality, especially with conditional embedded data, validation, and input text. When employing randomization, request that lab members record which treatment(s) they receive, to confirm proper randomization pursuant to evaluations using Test Responses.
 
-Again, examine potential issues and data structure by downloading data via Data & Analysis (using legacy format)
+Again, examine potential issues and data structure by downloading data via Data & Analysis (using legacy format).
 
 
 # Integration with MTurk
