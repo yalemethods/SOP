@@ -213,7 +213,7 @@ Once the Qualtrics survey is in concordance with the checklist items enumerated 
             ```r
             install.packages("devtools")
             library(devtools)
-            install_github(repo="MTurkR", username = "leeper")
+            install_github(repo = "MTurkR", username = "leeper")
 
             library(MturkR)
             ```
